@@ -10,7 +10,8 @@ import helmet from 'helmet';
 import compression from 'compression';
 import express from 'express';
 
-import logger from './helper_tools/async_logger.js';
+import logger, {requestLoggingMiddleware} from
+'./helper_tools/async_logger.js';
 import accountsRouter from './accounts/accounts_controller'
 
 /*
@@ -32,6 +33,7 @@ the world that this is an express app, opening up the server to targeted attacks
 server.use(helmet());
 // below will inflate compressed request bodies and auto-parses json bodies
 server.use(express.json());
+server.use(requestLoggingMiddleware)
 // tells the server to use and present these static files to the client browser
 // will default '/' homepage to the index.html contained within.
 server.use(express.static(Path.join(__dirname, '../client/build')));

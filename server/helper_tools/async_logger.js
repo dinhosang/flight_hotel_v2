@@ -20,14 +20,16 @@ const logger = winston.createLogger({
 });
 
 const requestLoggingMiddleware = (req, res, next) => {
-  logger.info(`Request received: ${{
+  logger.info(`Request received: ${JSON.stringify({
     "Method": req.method,
     "IP": req.ip,
+    "Host-name": req.hostname,
     "Base Url": req.baseUrl,
     "Path": req.path,
     "Full Url": req.originalUrl,
     "Protocol": req.protocol
-  }}`)
+  })}`);
+  next();
 }
 
-export {logger as default};
+export {logger as default, requestLoggingMiddleware};
