@@ -19,4 +19,15 @@ const logger = winston.createLogger({
   exceptionHandlers: [activeTransports.exception]
 });
 
+const requestLoggingMiddleware = (req, res, next) => {
+  logger.info(`Request received: ${{
+    "Method": req.method,
+    "IP": req.ip,
+    "Base Url": req.baseUrl,
+    "Path": req.path,
+    "Full Url": req.originalUrl,
+    "Protocol": req.protocol
+  }}`)
+}
+
 export {logger as default};
