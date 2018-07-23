@@ -9,7 +9,9 @@ import Path from 'path';
 import helmet from 'helmet';
 import compression from 'compression';
 import express from 'express';
+
 import logger from './helper_tools/async_logger.js';
+import accountsRouter from './accounts/accounts_controller'
 
 /*
 allows for access to an environment variable if not in development,
@@ -47,6 +49,8 @@ server.use((req, res, next) => {
   });
   next();
 })
+
+server.use('/accounts', accountsRouter);
 
 const activeServer = server.listen(serverPort, () => {
   const host = activeServer.address().address;
