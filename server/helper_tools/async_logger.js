@@ -1,6 +1,4 @@
-import winston, {
-  transports, format, combine
-} from 'winston';
+import winston, { transports, format, combine } from 'winston';
 
 const activeTransports = {
   console: new transports.Console({
@@ -8,16 +6,6 @@ const activeTransports = {
   }),
   exception: new transports.Console()
 };
-
-// const colors = {
-//   error: 'whiteBG blue',
-//   warn: 1,
-//   info: 'whiteBG green',
-//   verbose: 3,
-//   debug: 4
-// }
-//
-// winston.addColors(colors);
 
 const logger = winston.createLogger({
   transports: [activeTransports.console],
