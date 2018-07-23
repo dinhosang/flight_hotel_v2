@@ -10,7 +10,7 @@ import helmet from 'helmet';
 import compression from 'compression';
 import express from 'express';
 
-import logger, {requestLoggingMiddleware} from
+import logger, { requestLoggingMiddleware, response404LoggingMiddleware } from
 './helper_tools/async_logger.js';
 import accountsRouter from './accounts/accounts_controller'
 
@@ -53,10 +53,14 @@ server.use((req, res, next) => {
 })
 
 server.use('/accounts', accountsRouter);
+server.use(response404LoggingMiddleware)
+server.use((req, res) => {
+  res.status(404).json({"Result": null})
+})
 
 const activeServer = server.listen(serverPort, () => {
   const host = activeServer.address().address;
   const port = activeServer.address().port;
 
-  logger.info(`Server listening at ${host}:${port}`)
+  logger.info(`\n\tServer listening at ${host}:${port}`)
 })
