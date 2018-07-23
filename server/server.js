@@ -53,10 +53,7 @@ server.use((req, res, next) => {
 })
 
 server.use('/accounts', accountsRouter);
-server.use(response404LoggingMiddleware)
-server.use((req, res) => {
-  res.status(404).json({"Result": null})
-})
+server.use(response404LoggingMiddleware)l
 
 const activeServer = server.listen(serverPort, () => {
   const host = activeServer.address().address;
