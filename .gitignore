@@ -1,3 +1,4 @@
 .git
-node_modules
+/node_modules
 /client/build/bundle.*
+/server/searches/helper_tools/api_key.js
