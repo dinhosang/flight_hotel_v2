@@ -7,7 +7,7 @@ const urlBuilder = async (reqQueries) => {
     throw new Error(`Search type not found - ${reqQueries.searchType}`);
   }
 
-  const finalUrlArray = [baseUrl];
+  const urlArray = [baseUrl];
 
   // const queries = {...reqQueries}
   const queries = JSON.parse(JSON.stringify(reqQueries));
@@ -17,11 +17,11 @@ const urlBuilder = async (reqQueries) => {
                   ? process.env.API_KEY : apiKey;
 
   for(let key in queries) {
-    finalUrlArray.push(`${key}=${queries[key]}`)
+    urlArray.push(`${key}=${queries[key]}`)
   }
 
-  let baseArray = finalUrlArray.splice(0, 2);
-  return baseArray.join('') + '&' + finalUrlArray.join('&');
+  let baseArray = urlArray.splice(0, 2);
+  return baseArray.join('') + '&' + urlArray.join('&');
 }
 
 export {urlBuilder as default};

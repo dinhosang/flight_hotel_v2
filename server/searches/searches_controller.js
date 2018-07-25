@@ -22,12 +22,12 @@ const searchGetMiddleware = async (req, res) => {
     logger.error(e);
   }
 
-  if(apiResponse.status !== 200) {
-    logger.error('Response from external search API not 200');
-    logger.error(`Status: ${apiResponse.status} - ${apiResponse.data}`);
-    logger.error(`Original request queries for failed response: ${req.query}`)
-    res.status(apiResponse.status).json(apiResponse.data);
-  }
+  // if(apiResponse.status !== 200) {
+  //   logger.error('Response from external search API not 200');
+  //   logger.error(`Status: ${apiResponse.status} - ${apiResponse.data}`);
+  //   logger.error(`Original request queries for failed response: ${req.query}`)
+  //   res.status(apiResponse.status).json(apiResponse.data);
+  // }
 
   res.json(apiResponse.data);
 }

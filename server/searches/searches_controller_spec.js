@@ -73,10 +73,10 @@ describe('testing searches controller middleware', () => {
         ]
       })
 
-      beforeEach('before each test', async () => {
+      beforeEach('mocking the exteral api server, and the request to/response from the search controller middleware', async () => {
         nock('https://api.sandbox.amadeus.com')
           .get(`/v1.2/flights/inspiration-search?origin=LON&departure_date=2018-07-24&duration=12&apikey=${apiKey}`)
-          .reply(200, {
+          .reply(300, {
             	"origin": "LON",
             	"currency": "GBP",
             	"results": results
