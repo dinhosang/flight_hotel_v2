@@ -155,7 +155,7 @@ describe('testing searches controller middleware', () => {
 * the other. Or everything, or just the mocked so that there are only two
 * testing commands in the package.json rather than a lengthy list.
 */
-      it('should return an object with an array of objects under the results key', async () => {
+      xit('should return an object with an array of objects under the results key', async () => {
         assert.strictEqual(data.results instanceof Array, true);
         assert.strictEqual(typeof data.results[0], 'object');
         assert.strictEqual(data.results.length > 0, true)
