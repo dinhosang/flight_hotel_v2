@@ -5,13 +5,14 @@
   "main": "./server/server.js",
   "scripts": {
     "start": "nodemon -V --exec npm run babel-node",
-    "test": "mocha --require babel-register -A ./server/**/*_spec.js",
+    "test": "mocha --require babel-register --require babel-polyfill -A ./server/**/*_spec.js",
     "babel-node": "babel-node ./server/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "compression": "^1.7.3",
     "express": "^4.16.3",
     "helmet": "^3.13.0",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
     "mocha": "^5.2.0",

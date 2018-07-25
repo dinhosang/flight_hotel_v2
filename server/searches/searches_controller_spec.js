@@ -2,8 +2,8 @@ const assert = require('assert');
 const nock = require('nock');
 const httpMocks = require('node-mocks-http');
 
-import {apiKey} from './helper_tools/api_key.js';
-// import {}
+import apiKey from './helper_tools/api_key.js';
+import {searchGetMiddleware} from './searches_controller.js';
 
 describe('testing searches controller middleware', () => {
 
@@ -31,11 +31,14 @@ describe('testing searches controller middleware', () => {
 
   })
 
-  describe('mocking external api (amadeus) interactionr', () => {
+  describe('mocking external api (amadeus) interaction', () => {
 
-    context('controller making amadeus innovation search', () => {
+    context('testing controller making amadeus innovation search', () => {
 
       let results;
+      let request;
+      let response;
+      let data;
 
       before('setup results array', () => {
         results = [
@@ -70,18 +73,16 @@ describe('testing searches controller middleware', () => {
         ]
       })
 
-      beforeEach('before each test', () => {
+      beforeEach('before each test', async () => {
         nock('https://api.sandbox.amadeus.com')
-          .get(`/v1.2/flights/inspiration-search?apikey=${apiKey}&origin=LON&departure_date=2018-07-24&duration=12`)
+          .get(`/v1.2/flights/inspiration-search?origin=LON&departure_date=2018-07-24&duration=12&apikey=${apiKey}`)
           .reply(200, {
             	"origin": "LON",
             	"currency": "GBP",
             	"results": results
               });
-      })
 
-      it('should return a json with keys for origin, currency, and results array', () => {
-        const request = httpMocks.createRequest({
+        request = httpMocks.createRequest({
           query: {
             "searchType": "INSPIRATION",
             "origin": "LON",
@@ -89,14 +90,23 @@ describe('testing searches controller middleware', () => {
             "duration": "12"
           }
         });
-        const response = httpMocks.createResponse();
+        response = httpMocks.createResponse();
 
-        // await searchGetMiddleware(request, response);
-        assert.strictEqual(response.body.origin, "LON");
-        assert.strictEqual(response.body.currency, "GBP");
-        assert.deepStrictEqual(response.body.results, results)
+        await searchGetMiddleware(request, response);
+        data = JSON.parse(response._getData());
       })
 
+      it('should return a json with a key and value for origin', async () => {
+        assert.strictEqual(data.origin, "LON");
+      })
+
+      it('should return a json with a key and value for currency', async () => {
+        assert.strictEqual(data.currency, "GBP");
+      })
+
+      it('should return a json with a key and values for results', async () => {
+        assert.deepStrictEqual(data.results, results)
+      })
 
 
 
