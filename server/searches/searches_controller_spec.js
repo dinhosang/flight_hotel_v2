@@ -16,6 +16,14 @@ describe('testing searches controller middleware', () => {
     let currentMon = currentDateObject.getMonth() + 1;
     let currentYear = currentDateObject.getFullYear();
 
+    if (currentMon < 10) {
+      currentMon = `0${currentMon}`;
+    }
+
+    if (currentDay < 10) {
+      currentDay = `0${currentDay}`;
+    }
+
     // // checking if it is currently December and so need to roll over
     // let futureMon = currentMon === 12 ? 1 : currentMon + 1;
     // let futureYear = futureMon === 1 ? currentYear + 1 : currentYear;
@@ -28,10 +36,9 @@ describe('testing searches controller middleware', () => {
     // dateSearchString = `${currentDateString}--${futureDateString}`;
 
     dateSearchString = `${currentYear}-${currentMon}-${currentDay}`;
-
   })
 
-  describe('mocking external api (amadeus) interaction', () => {
+  describe('mocking Amadeus API connection', () => {
 
     context('testing controller making amadeus innovation search', () => {
 
@@ -76,7 +83,7 @@ describe('testing searches controller middleware', () => {
       beforeEach('mocking the exteral api server, and the request to/response from the search controller middleware', async () => {
         nock('https://api.sandbox.amadeus.com')
           .get(`/v1.2/flights/inspiration-search?origin=LON&departure_date=2018-07-24&duration=12&apikey=${apiKey}`)
-          .reply(300, {
+          .reply(200, {
             	"origin": "LON",
             	"currency": "GBP",
             	"results": results
@@ -108,9 +115,53 @@ describe('testing searches controller middleware', () => {
         assert.deepStrictEqual(data.results, results)
       })
 
+      after('removing nock mock of Amadeus API connection', () => {
+        nock.cleanAll();
+      })
+    })
+  })
 
+  describe('testing live connection to Amadeus API', () => {
 
+    context('testing Amadeus inspiration search', () => {
+
+      let request;
+      let response;
+      let data;
+
+      before('setting up request & response objects', async () => {
+        request = httpMocks.createRequest({
+          query: {
+            "searchType": "INSPIRATION",
+            "origin": "LON",
+            "departure_date": dateSearchString,
+            "duration": "12"
+          }
+        });
+        response = httpMocks.createResponse();
+
+        await searchGetMiddleware(request, response);
+        data = JSON.parse(response._getData());
+      })
+
+/*
+* Remove the x to make live tests, enter it again once finished to prevent
+* using up the quota attach to our key while running // general tests.
+*/
+
+/*
+* At some point can separate live and mocked external queries to separate files
+* and use different npm commands to test either everything, or just one or
+* the other. Or everything, or just the mocked so that there are only two
+* testing commands in the package.json rather than a lengthy list.
+*/
+      it('should return an object with an array of objects under the results key', async () => {
+        assert.strictEqual(data.results instanceof Array, true);
+        assert.strictEqual(typeof data.results[0], 'object');
+        assert.strictEqual(data.results.length > 0, true)
+      })
 
     })
   })
+
 })
