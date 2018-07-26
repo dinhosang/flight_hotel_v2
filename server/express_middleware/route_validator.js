@@ -14,6 +14,13 @@ const validationSchema = Joi.object({
 }).unknown(false);
 
 const validationMiddleware = async (req, res, next) => {
+
+  // should change to if(searchType equals inspir. ) then use one schema
+  // where the allowed origins are an array of the accepted roigin codes.
+  // with and else which then applies a more general schema of an array of
+  // just all allowed airport and city codes. Can grab those values from
+  // other apis or just from previous site group attempt.
+
   try {
     await Joi.validate(req.query, validationSchema, {abortEarly: false});
     next();
