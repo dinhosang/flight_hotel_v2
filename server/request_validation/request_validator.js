@@ -1,7 +1,7 @@
 import Joi from 'joi';
 
 import logger from '../helper_tools/async_logger.js';
-import inspOriginCodes from './amadeus_insp_origins.js';
+import inspOriginCodes from './helper_tools/amadeus_insp_origins.js';
 
 
 const inspValidationSchema = () => {
@@ -28,7 +28,7 @@ const inspValidationSchema = () => {
   }).unknown(false);
 }
 
-const validationMiddleware = async (req, res, next) => {
+const requestValidationMiddleware = async (req, res, next) => {
 
   // currently only checks for inspiration searches, with an inspiration schema.
   // when added more searches will need to add a check for search type,
@@ -42,11 +42,11 @@ const validationMiddleware = async (req, res, next) => {
       type: "Invalid Query",
       reason: error.message
     }});
-    logger.info("Invalid request queries received from user");
+    logger.info("\n\tInvalid request queries received from user");
     logger.info(error.message);
     logger.info(JSON.stringify(req.query));
     logger.info("End of invalid request log");
   }
 };
 
-export {validationMiddleware as default};
+export {requestValidationMiddleware};

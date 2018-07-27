@@ -12,7 +12,9 @@ import express from 'express';
 
 import logger, { requestLoggingMiddleware, response404LoggingMiddleware } from
 './helper_tools/async_logger.js';
-import accountsRouter from './accounts/accounts_controller'
+import {requestValidationMiddleware} from './request_validation/request_validator.js';
+import searchesRouter from './searches/searches_controller.js';
+import accountsRouter from './accounts/accounts_controller';
 
 /*
 allows for access to an environment variable if not in development,
@@ -47,7 +49,7 @@ server.use((req, res, next) => {
 })
 // below will inflate compressed request bodies and auto-parses json bodies
 server.use(express.json());
-server.use(requestLoggingMiddleware)
+server.use(requestLoggingMiddleware);
 // tells the server to use and present these static files to the client browser
 // will default '/' homepage to the index.html contained within.
 server.use(express.static(Path.join(__dirname, '../client/build')));
@@ -56,6 +58,8 @@ server.use(express.urlencoded({extended: true}));
 // compress response bodies to reduce size of packet sent to client browser
 server.use(compression());
 
+server.use(requestValidationMiddleware);
+server.use('/search', searchesRouter);
 server.use('/accounts', accountsRouter);
 server.use(response404LoggingMiddleware);
 

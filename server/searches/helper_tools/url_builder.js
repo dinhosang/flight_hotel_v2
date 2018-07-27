@@ -3,9 +3,9 @@ import uriEnum from './uri_enum.js';
 
 const urlBuilder = async (reqQueries) => {
   const baseUrl = uriEnum[reqQueries.searchType];
-  if (!baseUrl) {
-    throw new Error(`Search type not found - ${reqQueries.searchType}`);
-  }
+  // if (!baseUrl) {
+  //   throw new Error(`Search type not found - ${reqQueries.searchType}`);
+  // }
 
   const urlArray = [baseUrl];
 
