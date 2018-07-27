@@ -1,6 +1,6 @@
 const assert = require('assert');
 const nock = require('nock');
-const httpMocks = require('node-mocks-http');
+const mocksHttp = require('node-mocks-http');
 
 import apiKey from './helper_tools/api_key.js';
 import {searchGetMiddleware} from './searches_controller.js';
@@ -89,7 +89,7 @@ describe('testing searches controller middleware', () => {
             	"results": results
               });
 
-        request = httpMocks.createRequest({
+        request = mocksHttp.createRequest({
           query: {
             "searchType": "INSPIRATION",
             "origin": "LON",
@@ -97,7 +97,7 @@ describe('testing searches controller middleware', () => {
             "duration": "12"
           }
         });
-        response = httpMocks.createResponse();
+        response = mocksHttp.createResponse();
 
         await searchGetMiddleware(request, response);
         data = JSON.parse(response._getData());
@@ -130,7 +130,7 @@ describe('testing searches controller middleware', () => {
       let data;
 
       before('setting up request & response objects', async () => {
-        request = httpMocks.createRequest({
+        request = mocksHttp.createRequest({
           query: {
             "searchType": "INSPIRATION",
             "origin": "LON",
@@ -138,7 +138,7 @@ describe('testing searches controller middleware', () => {
             "duration": "12"
           }
         });
-        response = httpMocks.createResponse();
+        response = mocksHttp.createResponse();
 
         await searchGetMiddleware(request, response);
         data = JSON.parse(response._getData());
