@@ -3,8 +3,9 @@ import express from 'express';
 import urlBuilder from './helper_tools/url_builder.js';
 import requestTool from './helper_tools/request_tool.js';
 import logger from '../helper_tools/async_logger.js';
+import {requestValidationMiddleware} from '../request_validation/request_validator.js';
 
-const searchesRouter = new express.Router();
+const searchRouter = new express.Router();
 const searchGetMiddleware = async (req, res, next) => {
   let url;
 
@@ -28,6 +29,6 @@ const searchGetMiddleware = async (req, res, next) => {
   res.json(apiResponse.data);
 };
 
-searchesRouter.get('/', searchGetMiddleware);
+searchRouter.get('/', requestValidationMiddleware, searchGetMiddleware);
 
-export {searchesRouter as default, searchGetMiddleware};
+export {searchRouter as default, searchGetMiddleware};

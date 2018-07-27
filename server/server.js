@@ -12,8 +12,7 @@ import express from 'express';
 
 import logger, { requestLoggingMiddleware, response404LoggingMiddleware } from
 './helper_tools/async_logger.js';
-import {requestValidationMiddleware} from './request_validation/request_validator.js';
-import searchesRouter from './searches/searches_controller.js';
+import searchRouter from './searches/searches_controller.js';
 import accountsRouter from './accounts/accounts_controller';
 
 /*
@@ -58,9 +57,9 @@ server.use(express.urlencoded({extended: true}));
 // compress response bodies to reduce size of packet sent to client browser
 server.use(compression());
 
-server.use(requestValidationMiddleware);
-server.use('/search', searchesRouter);
+server.use('/search', searchRouter);
 server.use('/accounts', accountsRouter);
+
 server.use(response404LoggingMiddleware);
 
 const activeServer = server.listen(serverPort, () => {
