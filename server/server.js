@@ -51,7 +51,7 @@ server.use(express.json());
 server.use(requestLoggingMiddleware);
 // tells the server to use and present these static files to the client browser
 // will default '/' homepage to the index.html contained within.
-server.use(express.static(Path.join(__dirname, '../client/build')));
+server.use(express.static(Path.join(__dirname, '../client/public')));
 // allows for parsing of urlencoded bodies (escaped javascript essentially)
 server.use(express.urlencoded({extended: true}));
 // compress response bodies to reduce size of packet sent to client browser
