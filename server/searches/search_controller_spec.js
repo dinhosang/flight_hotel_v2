@@ -1,11 +1,11 @@
-const assert = require('assert');
-const nock = require('nock');
-const mocksHttp = require('node-mocks-http');
+import assert from 'assert';
+import nock from 'nock';
+import mocksHttp from 'node-mocks-http';
 
 import apiKey from './helper_tools/api_key.js';
-import {searchGetMiddleware} from './searches_controller.js';
+import {searchGetMiddleware} from './search_controller.js';
 
-describe('testing searches controller middleware', () => {
+describe('Testing searches controller middleware', () => {
 
   let dateSearchString
 
@@ -40,7 +40,7 @@ describe('testing searches controller middleware', () => {
 
   describe('mocking Amadeus API connection', () => {
 
-    context('testing controller making amadeus innovation search', () => {
+    context('controller making amadeus inspiration search', () => {
 
       let results;
       let request;
@@ -120,48 +120,4 @@ describe('testing searches controller middleware', () => {
       })
     })
   })
-
-  describe('testing live connection to Amadeus API', () => {
-
-    context('testing Amadeus inspiration search', () => {
-
-      let request;
-      let response;
-      let data;
-
-      before('setting up request & response objects', async () => {
-        request = mocksHttp.createRequest({
-          query: {
-            "searchType": "INSPIRATION",
-            "origin": "LON",
-            "departure_date": dateSearchString,
-            "duration": "12"
-          }
-        });
-        response = mocksHttp.createResponse();
-
-        await searchGetMiddleware(request, response);
-        data = JSON.parse(response._getData());
-      })
-
-/*
-* Remove the x to make live tests, enter it again once finished to prevent
-* using up the quota attach to our key while running // general tests.
-*/
-
-/*
-* At some point can separate live and mocked external queries to separate files
-* and use different npm commands to test either everything, or just one or
-* the other. Or everything, or just the mocked so that there are only two
-* testing commands in the package.json rather than a lengthy list.
-*/
-      xit('should return an object with an array of objects under the results key', async () => {
-        assert.strictEqual(data.results instanceof Array, true);
-        assert.strictEqual(typeof data.results[0], 'object');
-        assert.strictEqual(data.results.length > 0, true)
-      })
-
-    })
-  })
-
 })

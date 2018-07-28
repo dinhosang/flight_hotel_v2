@@ -12,7 +12,7 @@ import express from 'express';
 
 import logger, { requestLoggingMiddleware, response404LoggingMiddleware } from
 './helper_tools/async_logger.js';
-import searchRouter from './searches/searches_controller.js';
+import searchRouter from './searches/search_controller.js';
 import accountsRouter from './accounts/accounts_controller';
 
 /*

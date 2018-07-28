@@ -1,7 +1,7 @@
 import express from 'express';
 
 import urlBuilder from './helper_tools/url_builder.js';
-import requestTool from './helper_tools/request_tool.js';
+import requestTool from '../helper_tools/request_tool.js';
 import logger from '../helper_tools/async_logger.js';
 import requestValidator from '../request_validation/request_validator.js';
 

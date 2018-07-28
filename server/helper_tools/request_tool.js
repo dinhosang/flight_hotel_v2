@@ -9,8 +9,6 @@ const requestTool = {
       throw e;
     }
   }
-
-
 }
 
 export {requestTool as default};

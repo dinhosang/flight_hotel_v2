@@ -1,12 +1,12 @@
-const assert = require('assert');
-const nock = require('nock');
-const mocksHttp = require('node-mocks-http');
+import assert from 'assert';
+import nock from 'nock';
+import mocksHttp from 'node-mocks-http';
 
 import requestValidator from './request_validator.js';
 import logger from '../helper_tools/async_logger.js';
 import URL_ENUM from '../searches/helper_tools/url_enum.js';
 
-describe('testing request validator middleware for GET search requests', () => {
+describe('Testing request validator middleware for GET search requests', () => {
 
   let validRequest;
   let response;
@@ -155,7 +155,7 @@ describe('testing request validator middleware for GET search requests', () => {
 
   // SPECIFIC INVALID GET REQUEST TESTS START POINT
 
-  context ('testing forms of invalid search GET request queries:', () => {
+  context ('forms of invalid search GET request queries:', () => {
 
     let res;
     let invalidRequest;
@@ -235,7 +235,7 @@ describe('testing request validator middleware for GET search requests', () => {
         assert.notStrictEqual(result, 'validated');
       })
 
-      it('origin is not a valid IATA code when searchType is not "INSPIRATION", but is one of the other valid types')
+      it('origin is not a valid IATA code when searchType is a valid value other than "INSPIRATION"')
 
       it('origin has a value of null', async () => {
         invalidRequest.query.origin = null;
@@ -298,7 +298,7 @@ describe('testing request validator middleware for GET search requests', () => {
 
       it('departure_date is a day prior to origins current date')
 
-      it('departure_date is too far into the future - before 360 days')
+      it('departure_date is too far into the future - after 360 days')
 
       it('departure_date is null', async () => {
         invalidRequest.query.departure_date = null;
