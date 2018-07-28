@@ -1,5 +1,5 @@
 import apiKey from './api_key.js';
-import uriEnum from './uri_enum.js';
+import uriEnum from './url_enum.js';
 
 const urlBuilder = async (reqQueries) => {
   const baseUrl = uriEnum[reqQueries.searchType];

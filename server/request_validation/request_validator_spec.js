@@ -2,10 +2,9 @@ const assert = require('assert');
 const nock = require('nock');
 const mocksHttp = require('node-mocks-http');
 
-import {requestValidationMiddleware} from './request_validator.js';
+import requestValidator from './request_validator.js';
 import logger from '../helper_tools/async_logger.js';
-import URI_ENUM from '../searches/helper_tools/uri_enum.js';
-
+import URL_ENUM from '../searches/helper_tools/url_enum.js';
 
 describe('testing request validator middleware for GET search requests', () => {
 
@@ -89,6 +88,8 @@ describe('testing request validator middleware for GET search requests', () => {
     }
   });
 
+  // VALID REQUEST TESTS
+
   context('valid inspiration search GET request treatment:', () => {
 
     let res;
@@ -97,7 +98,7 @@ describe('testing request validator middleware for GET search requests', () => {
       result = null;
       res = response();
 
-      await requestValidationMiddleware(validRequest(), res, stubMiddleware);
+      await requestValidator.search.get(validRequest(), res, stubMiddleware);
     })
 
 
@@ -111,6 +112,8 @@ describe('testing request validator middleware for GET search requests', () => {
 
   })
 
+  // GENERAL INVALID GET REQUEST TESTS START POINT
+
   context('response to invalid search GET request:', () => {
 
     let res;
@@ -122,7 +125,7 @@ describe('testing request validator middleware for GET search requests', () => {
       const invalidRequest = validRequest();
       invalidRequest.query.duration = 16;
 
-      await requestValidationMiddleware(invalidRequest,res, stubMiddleware);
+      await requestValidator.search.get(invalidRequest,res, stubMiddleware);
     })
 
     afterEach('reset result to ensure a clean foundation', () => {
@@ -150,6 +153,8 @@ describe('testing request validator middleware for GET search requests', () => {
     })
   })
 
+  // SPECIFIC INVALID GET REQUEST TESTS START POINT
+
   context ('testing forms of invalid search GET request queries:', () => {
 
     let res;
@@ -172,54 +177,59 @@ describe('testing request validator middleware for GET search requests', () => {
     it('fails any request whose query contains an unexpected key', async () => {
       invalidRequest.query.aNewKey = 'here is a fake key/value pair';
 
-      await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
+      await requestValidator.search.get(invalidRequest, res, stubMiddleware);
       assert.notStrictEqual(result, 'validated');
     })
+
+    // DURATION TESTS
 
     context('duration - should fail any request where:', () => {
 
       it('duration is greater than 15', async () => {
         invalidRequest.query.duration = 16;
 
-        await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
+        await requestValidator.search.get(invalidRequest, res, stubMiddleware);
         assert.notStrictEqual(result, 'validated');
       })
 
       it('duration equals 0', async () => {
         invalidRequest.query.duration = 0;
 
-        await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
+        await requestValidator.search.get(invalidRequest, res, stubMiddleware);
         assert.notStrictEqual(result, 'validated');
       })
 
       it('duration is less than 0', async () => {
         invalidRequest.query.duration = -1;
 
-        await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
+        await requestValidator.search.get(invalidRequest, res, stubMiddleware);
         assert.notStrictEqual(result, 'validated');
       })
 
       it('duration is null', async () => {
         invalidRequest.query.duration = null;
 
-        await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
+        await requestValidator.search.get(invalidRequest, res, stubMiddleware);
         assert.notStrictEqual(result, 'validated');
       })
 
-      it('duration is undefined', async () => {
+      // duration can be undefined
+      it('should not fail if duration is undefined', async () => {
         delete invalidRequest.query.duration;
 
-        await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
-        assert.notStrictEqual(result, 'validated');
+        await requestValidator.search.get(invalidRequest, res, stubMiddleware);
+        assert.strictEqual(result, 'validated');
       })
     })
+
+    // ORIGIN TESTS
 
     context('origin code - should fail any request where:', () => {
 
       it('origin is not found in amadeus_insp_origins.js when searchType is "INSPIRATION"', async () => {
         invalidRequest.query.origin = "908";
 
-        await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
+        await requestValidator.search.get(invalidRequest, res, stubMiddleware);
 
         assert.strictEqual(invalidRequest.query.searchType, "INSPIRATION")
         assert.notStrictEqual(result, 'validated');
@@ -230,25 +240,25 @@ describe('testing request validator middleware for GET search requests', () => {
       it('origin has a value of null', async () => {
         invalidRequest.query.origin = null;
 
-        await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
+        await requestValidator.search.get(invalidRequest, res, stubMiddleware);
         assert.notStrictEqual(result, 'validated');
       })
 
       it('origin is undefined', async () => {
         delete invalidRequest.query.origin;
 
-        await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
+        await requestValidator.search.get(invalidRequest, res, stubMiddleware);
         assert.notStrictEqual(result, 'validated');
       })
     })
 
     context('searchType - should fail any request where:', () => {
-      it('searchType is not a key in URI_ENUM', async () => {
-        const validKeys = Object.keys(URI_ENUM);
+      it('searchType is not a key in URL_ENUM', async () => {
+        const validKeys = Object.keys(URL_ENUM);
         const invalidType = "NotASearch"
         invalidRequest.query.searchType = invalidType;
 
-        await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
+        await requestValidator.search.get(invalidRequest, res, stubMiddleware);
 
         assert.notStrictEqual(result, 'validated');
         assert.notStrictEqual(validKeys.includes(invalidType), true);
@@ -257,14 +267,14 @@ describe('testing request validator middleware for GET search requests', () => {
       it('searchType has a value of null', async () => {
         invalidRequest.query.searchType = null;
 
-        await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
+        await requestValidator.search.get(invalidRequest, res, stubMiddleware);
         assert.notStrictEqual(result, 'validated');
       })
 
       it('searchType is undefined', async () => {
         delete invalidRequest.query.searchType;
 
-        await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
+        await requestValidator.search.get(invalidRequest, res, stubMiddleware);
         assert.notStrictEqual(result, 'validated');
       })
     })
@@ -282,7 +292,7 @@ describe('testing request validator middleware for GET search requests', () => {
         let invReqQuery = invalidRequest.query;
         invReqQuery.departure_date = dateCreator(DATE_ENUM.DEFINITELY_OLD);
 
-        await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
+        await requestValidator.search.get(invalidRequest, res, stubMiddleware);
         assert.notStrictEqual(result, 'validated');
       })
 
@@ -293,14 +303,14 @@ describe('testing request validator middleware for GET search requests', () => {
       it('departure_date is null', async () => {
         invalidRequest.query.departure_date = null;
 
-        await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
+        await requestValidator.search.get(invalidRequest, res, stubMiddleware);
         assert.notStrictEqual(result, 'validated');
       })
 
       it('departure_date is undefined', async () => {
         delete invalidRequest.query.departure_date;
 
-        await requestValidationMiddleware(invalidRequest, res, stubMiddleware);
+        await requestValidator.search.get(invalidRequest, res, stubMiddleware);
         assert.notStrictEqual(result, 'validated');
       })
     })
