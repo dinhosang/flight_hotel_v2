@@ -23,7 +23,11 @@ describe('testing request validator middleware for GET search requests', () => {
 
     DATE_ENUM = {
       VALID: "today",
+      // should change below to current date minus 8 hours 1 second.
+      // amadeus does not allow past UTC -8. Not sure it allows
+      // -8 but seems likely it would to allow mainland US requests.
       DEFINITELY_OLD: "two days ago",
+      // 360 days ahead is the max! Could implement at some point.
       TOO_FUTURE: "far future"
     }
 
@@ -284,7 +288,7 @@ describe('testing request validator middleware for GET search requests', () => {
 
       it('departure_date is a day prior to origins current date')
 
-      it('departure_date is too far into the future')
+      it('departure_date is too far into the future - before 360 days')
 
       it('departure_date is null', async () => {
         invalidRequest.query.departure_date = null;
