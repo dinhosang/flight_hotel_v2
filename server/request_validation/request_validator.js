@@ -5,7 +5,7 @@ import inspOriginCodes from './helper_tools/amadeus_insp_origins.js';
 
 const requestValidator = {
 
-  inspirationSchema: () => {
+  prepareIsoDate: () => {
     const dateNow = new Date();
 
     const year = dateNow.getFullYear();
@@ -14,7 +14,11 @@ const requestValidator = {
       month = `0${month}`;
     }
     const dayDate = dateNow.getDate();
-    const isoDate = `${year}-${month}-${dayDate}`;
+    return `${year}-${month}-${dayDate}`;
+  },
+
+  inspirationSchema: () => {
+    const isoDate = requestValidator.prepareIsoDate();
 
     return Joi.object({
       searchType: Joi.string().valid("INSPIRATION").required(),
