@@ -13,25 +13,15 @@ import logoImage from './resources/images/temp-logo.png';
 class App extends Component {
 
   constructor(props) {
-    super(props)
-
+    super(props);
     this.state = {
       displayNav: false,
       language: "english",
       // grabs protocol and domain from browser, not including paths
       url: document.location.origin,
       handlers: this.createHandlers()
-    }
-  }
-
-  componentDidMount() {
-    const navItems = this.createSiteBannerNavItems();
-    const logo = this.createSiteLogo();
-    this.setState({
-      navItems: navItems,
-      logo: logo
-    });
-  }
+    };
+  };
 
   handleClick = (value, event) => {
     event.preventDefault();
@@ -42,10 +32,10 @@ class App extends Component {
         break;
       default:
 
-    }
+    };
 
     console.log(value);
-  }
+  };
 
   createHandlers = () => {
     const handlers = {};
@@ -100,8 +90,8 @@ class App extends Component {
 
     return (
         <SiteBanner displayNav={this.state.displayNav}
-                    logo = {this.state.logo}
-                    navItems={this.state.navItems}/>
+                    logo = {this.createSiteLogo()}
+                    navItems={this.createSiteBannerNavItems()}/>
     );
   }
 
