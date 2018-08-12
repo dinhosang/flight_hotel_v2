@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import nanoid from 'nanoid';
 
-import SiteBanner from './containers/SiteBanner.js';
+import SiteBanner from './site_banner/SiteBanner.js';
 import ListAnchor from './common_components/ListAnchor.js';
-import AnchorImage from './common_components/AnchorImage.js';
-
 
 import siteStrings from './resources/site_strings.js';
-import logoImage from './resources/images/temp-logo.png';
 
+// import './App.css';
 
 class App extends Component {
 
@@ -36,6 +34,10 @@ class App extends Component {
 
     console.log(value);
   };
+
+  handleLanguageSelectChange = (event) => {
+    this.setState({language: event.target.value});
+  }
 
   createHandlers = () => {
     const handlers = {};
@@ -76,21 +78,42 @@ class App extends Component {
     return [searchTitle, inspirationLink, destinationLink];
   }
 
-  createSiteLogo = () => {
-    return (
-      <AnchorImage domainUrl={this.state.url}
-              image={logoImage}
-              altText={siteStrings[this.state.language].altLogoImg}
-              handleClick={this.state.handlers[siteStrings.english.homepage]}
-      />
-    );
-  }
-
   render() {
+    // Preparing props for Logo component
+    const logoDetails = {
+      url: this.state.url,
+      altText: siteStrings[this.state.language].altLogoImg,
+      handleClick: this.state.handlers[siteStrings.english.homepage],
+      id: "site-banner-logo"
+    }
 
+
+    // Preparing props for LanguageSelect component
+    const supportedLangs = siteStrings.languages.sort();
+    const languageConverterToOriginalLang = {};
+    const languageConverterToCurrentLang = {};
+    const currLang = this.state.language;
+
+    supportedLangs.forEach((lang) => {
+      const langInOrig = siteStrings[lang][lang];
+      languageConverterToOriginalLang[lang] = langInOrig;
+      languageConverterToCurrentLang[lang] = siteStrings[currLang][lang];
+    })
+
+    const langSelectDetails = {
+      supportedLangs: supportedLangs,
+      languageConverterToOriginalLang: languageConverterToOriginalLang,
+      languageConverterToCurrentLang: languageConverterToCurrentLang,
+      currentLang: currLang,
+      handleChange: this.handleLanguageSelectChange,
+      idCreater: nanoid
+    }
+
+    // Creation of SiteBanner
     return (
         <SiteBanner displayNav={this.state.displayNav}
-                    logo = {this.createSiteLogo()}
+                    logoDetails={logoDetails}
+                    langSelectDetails={langSelectDetails}
                     navItems={this.createSiteBannerNavItems()}/>
     );
   }
