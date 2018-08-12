@@ -1,21 +1,110 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import nanoid from 'nanoid';
+
+import SiteBanner from './containers/site_banner/SiteBanner.js';
+import ListAnchor from './common_components/ListAnchor.js';
+import AnchorImage from './common_components/AnchorImage.js';
+
+
+import siteStrings from './resources/site_strings.js';
+import logoImage from './resources/images/temp-logo.png';
+
 
 class App extends Component {
-  render() {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      displayNav: false,
+      language: "english",
+      // grabs protocol and domain from browser, not including paths
+      url: document.location.origin,
+      handlers: this.createHandlers()
+    }
+  }
+
+  componentDidMount() {
+    const navItems = this.createSiteBannerNavItems();
+    const logo = this.createSiteLogo();
+    this.setState({
+      navItems: navItems,
+      logo: logo
+    });
+  }
+
+  handleClick = (value, event) => {
+    event.preventDefault();
+
+    switch (value) {
+      case siteStrings.english.inspiration:
+
+        break;
+      default:
+
+    }
+
+    console.log(value);
+  }
+
+  createHandlers = () => {
+    const handlers = {};
+    const navItemsValues = [
+      siteStrings.english.homepage,
+      siteStrings.english.inspiration,
+      siteStrings.english.destination,
+    ];
+
+    // ensuring that when the handleClick method is invoked that a value
+    // is passed through which will inform the method what element was clicked.
+    navItemsValues.forEach((value) => {
+      handlers[value] = this.handleClick.bind(this, value)
+    });
+
+    return handlers;
+  }
+
+  createSiteBannerNavItems = () => {
+    const handlers = this.state.handlers;
+    const language = this.state.language;
+    const english = siteStrings.english;
+
+    const searchTitle = (
+      <li key={nanoid()}>
+        {siteStrings[language].searchTitle}
+      </li>
+    );
+
+    const inspirationLink = (
+      <ListAnchor url={this.state.url} path="inspiration-search" handleClick={handlers[english.inspiration]} displayValue={siteStrings[language].inspiration} key={nanoid()} />
+    );
+
+    const destinationLink = (
+      <ListAnchor url={this.state.url} path="destination-search" handleClick={handlers[english.destination]} displayValue={siteStrings[language].destination} key={nanoid()}/>
+    );
+
+    return [searchTitle, inspirationLink, destinationLink];
+  }
+
+  createSiteLogo = () => {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <AnchorImage domainUrl={this.state.url}
+              image={logoImage}
+              altText={siteStrings[this.state.language].altLogoImg}
+              handleClick={this.state.handlers[siteStrings.english.homepage]}
+      />
     );
   }
+
+  render() {
+
+    return (
+        <SiteBanner displayNav={this.state.displayNav}
+                    logo = {this.state.logo}
+                    navItems={this.state.navItems}/>
+    );
+  }
+
 }
 
 export default App;
