@@ -81,7 +81,7 @@ class App extends Component {
   render() {
     // Preparing props for Logo component
     const logoDetails = {
-      url: this.state.url,
+      domainUrl: this.state.url,
       altText: siteStrings[this.state.language].altLogoImg,
       handleClick: this.state.handlers[siteStrings.english.homepage],
       id: "site-banner-logo"
@@ -108,6 +108,7 @@ class App extends Component {
       handleChange: this.handleLanguageSelectChange,
       idCreater: nanoid
     }
+
 
     // Creation of SiteBanner
     return (

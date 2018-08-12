@@ -8,14 +8,8 @@ import logoImage from './logo.png';
 
 const SiteBanner = (props) => {
 
-  const logoObject = props.logoDetails
   const siteLogo = (
-    <AnchorImage domainUrl={logoObject.url}
-            image={logoImage}
-            altText={logoObject.altText}
-            handleClick={logoObject.handleClick}
-            id={logoObject.id}
-    />
+    <AnchorImage image={logoImage} {...props.logoDetails} />
   );
   const languageSelect = (
     <LanguageSelect {...props.langSelectDetails} />
