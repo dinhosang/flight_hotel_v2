@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import nanoid from 'nanoid';
 
-import SiteBanner from './containers/site_banner/SiteBanner.js';
+import SiteBanner from './containers/SiteBanner.js';
 import ListAnchor from './common_components/ListAnchor.js';
 import AnchorImage from './common_components/AnchorImage.js';
 

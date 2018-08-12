@@ -1,23 +1,24 @@
 import React from 'react';
 
-const SiteNav = (props) => {
-  if(!props.display){
+const NavList = (props) => {
+  if(props.display === "undefined" || props.display) {
     return (
-      <nav id="site-banner-nav" className="hidden">
+      <nav id={props.id}>
         <ul>
           {props.navItems}
         </ul>
       </nav>
-    )
+    );
   } else {
     return (
-      <nav id="site-banner-nav">
+      <nav id={props.id} className="hidden">
         <ul>
           {props.navItems}
         </ul>
       </nav>
-    )
+    );
   }
-}
 
-export {SiteNav as default};
+};
+
+export {NavList as default};

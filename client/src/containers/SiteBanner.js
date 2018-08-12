@@ -1,13 +1,13 @@
 import React, { Fragment } from 'react';
 
-import SiteNav from './SiteNav.js';
+import NavList from '../common_components/NavList.js';
 
 
 const SiteBanner = (props) => {
   return (
     <Fragment>
       {props.logo}
-      <SiteNav navItems={props.navItems} display={props.displayNav}/>
+      <NavList navItems={props.navItems} display={props.displayNav}/>
     </Fragment>
   );
 }
