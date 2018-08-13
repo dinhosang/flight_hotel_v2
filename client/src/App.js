@@ -78,10 +78,6 @@ class App extends Component {
       const languageConverterToCurrentLang = {};
       const wordForLanguage = siteStrings[currentLang].wordForLanguage;
 
-      const wrapperForOnClick = (value) => {
-        this.handleClickBannerLanguageSelectChange(value);
-      }
-
       supportedLangs.forEach((lang) => {
         const langInOrig = siteStrings[lang][lang];
         languageConverterToOriginalLang[lang] = langInOrig;
@@ -93,7 +89,7 @@ class App extends Component {
         languageConverterToOriginalLang: languageConverterToOriginalLang,
         languageConverterToCurrentLang: languageConverterToCurrentLang,
         currentLang: currentLang,
-        handleClickAppWrapper: wrapperForOnClick,
+        handleClick: this.handleClickBannerLanguageSelectChange,
         idCreater: nanoid,
         summary: wordForLanguage,
       }

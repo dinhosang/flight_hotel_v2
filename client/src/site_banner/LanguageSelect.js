@@ -24,9 +24,9 @@ class LanguageSelect extends Component {
   // to a language having been selected.
   componentDidUpdate() {
     if(this.state.open){
-      document.addEventListener('click', this.handleDocumentClick)
+      document.addEventListener('click', this.handleDocumentClick, {once: true})
     } else {
-      document.removeEventListener('click', this.handleDocumentClick)
+      document.removeEventListener('click', this.handleDocumentClick, {once: true})
     }
   }
 
@@ -40,10 +40,10 @@ class LanguageSelect extends Component {
   }
 
   handleClickLocalWrapper = (language) => {
-    this.props.handleClickAppWrapper(language)
     this.setState({
       open: false
     })
+    this.props.handleClick(language)
   }
 
   handleDocumentClick = (event) => {

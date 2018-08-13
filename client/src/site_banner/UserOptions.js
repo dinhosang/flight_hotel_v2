@@ -12,9 +12,9 @@ class UserOptions extends Component {
 
   componentDidUpdate() {
     if(this.state.open){
-      document.addEventListener('click', this.handleDocumentClick)
+      document.addEventListener('click', this.handleDocumentClick, {once: true})
     } else {
-      document.removeEventListener('click', this.handleDocumentClick)
+      document.removeEventListener('click', this.handleDocumentClick, {once: true})
     }
   }
 
