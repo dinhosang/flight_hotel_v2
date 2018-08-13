@@ -6,15 +6,16 @@ class LanguageSelect extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      detailsOpen: false
+      open: false
     }
   }
 
-  handleLanguageListOpenClick = (event) => {
+  handleDetailsSummaryClick = (event) => {
     event.preventDefault();
+    console.log('hi');
     this.setState((prevState) => {
       return {
-        detailsOpen: !prevState.detailsOpen
+        open: !prevState.open
       }
     })
   }
@@ -22,7 +23,7 @@ class LanguageSelect extends Component {
   handleClickLocalWrapper = (language) => {
     this.props.handleClickAppWrapper(language)
     this.setState({
-      detailsOpen: false
+      open: false
     })
   }
 
@@ -61,7 +62,8 @@ class LanguageSelect extends Component {
 
     return (
       <Details id="language-select"
-        handleClick={this.handleLanguageListOpenClick}
+        open={this.state.open}
+        handleClick={this.handleDetailsSummaryClick}
         summary={this.props.currentLangWordForEnglishWordLanguage}>
         {this.createLanguagesList()}
       </Details>
