@@ -1,32 +1,89 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const LanguageSelect = (props) => {
-  const langs = props.supportedLangs;
-  const languageConverterToOriginalLang = props.languageConverterToOriginalLang;
-  const languageConverterToCurrentLang = props.languageConverterToCurrentLang;
+class LanguageSelect extends Component {
 
-  const options = langs.map((language) => {
-    if(language !== props.currentLang) {
-      return (
-        <option value={language} key={props.idCreater()}>
-          {`${languageConverterToOriginalLang[language]}`
-          + ` (${languageConverterToCurrentLang[language]})`}
-        </option>
+  constructor(props) {
+    super(props)
+    this.state = {
+      detailsOpen: false
+    }
+  }
+
+  handleLanguageListOpenClick = (event) => {
+    event.preventDefault();
+    this.setState((prevState) => {
+      return {
+        detailsOpen: !prevState.detailsOpen
+      }
+    })
+  }
+
+  handleClickLocalWrapper = (language) => {
+    this.props.handleClickAppWrapper(language)
+    this.setState({
+      detailsOpen: false
+    })
+  }
+
+  createLanguagesList = () => {
+    const langs = this.props.supportedLangs;
+    const languageConverterToOriginalLang = this.props.languageConverterToOriginalLang;
+    const languageConverterToCurrentLang = this.props.languageConverterToCurrentLang;
+    const idCreater = this.props.idCreater;
+
+    const listItems = langs.map((language) => {
+      const handleClick = this.handleClickLocalWrapper.bind(this, language)
+      if(language !== this.props.currentLang) {
+        return (
+          <li value={language} key={idCreater()} onClick={handleClick}>
+            {`${languageConverterToOriginalLang[language]}`
+            + ` (${languageConverterToCurrentLang[language]})`}
+          </li>
+        )
+      } else {
+        return (
+          <li value={language} key={idCreater()}  onClick={handleClick}>
+            {languageConverterToOriginalLang[language]}
+          </li>
+        )
+      }
+    });
+
+    return (
+      <ul>
+        {listItems}
+      </ul>
+    );
+  }
+
+  render() {
+    let finalDetails;
+    if(this.state.detailsOpen) {
+      finalDetails = (
+        <details id="user-options" open>
+          <summary onClick={this.handleLanguageListOpenClick}>
+            <p>{this.props.currentLangWordForEnglishWordLanguage}</p>
+            <span className="dropdown-caret"></span>
+          </summary>
+          {this.createLanguagesList()}
+        </details>
       )
     } else {
-      return (
-        <option value={language} key={props.idCreater()}>
-          {languageConverterToOriginalLang[language]}
-        </option>
+      finalDetails = (
+        <details id="user-options">
+          <summary onClick={this.handleLanguageListOpenClick}>
+            <p>{this.props.currentLangWordForEnglishWordLanguage}</p>
+            <span className="dropdown-caret"></span>
+          </summary>
+          {this.createLanguagesList()}
+        </details>
       )
     }
-  })
 
-  return (
-    <select value={props.currentLang} onChange={props.handleChange}>
-      {options}
-    </select>
-  )
-};
+    return finalDetails;
+  }
+
+
+}
 
 export {LanguageSelect as default};

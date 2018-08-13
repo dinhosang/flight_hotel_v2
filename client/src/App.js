@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import nanoid from 'nanoid';
 
 import SiteBanner from './site_banner/SiteBanner.js';
@@ -14,14 +14,34 @@ class App extends Component {
     super(props);
     this.state = {
       displayNav: false,
-      language: "english",
+      currentLanguage: "english",
       // grabs protocol and domain from browser, not including paths
-      url: document.location.origin,
-      handlers: this.createHandlers()
+      domain: document.location.origin
     };
-  };
+  }
 
-  handleClick = (value, event) => {
+  // Exists as the creation of the SiteBanner requires state values
+  // to already exist to then reference. State may move out of this component
+  // for something like language and domain, wish values that Exist
+  // in state to only be found once and then retrieved. Having two instances
+  // of say a domain being determined feels like it could leave the site open
+  // to future trouble, especially as it is built upon and modified/updated.
+  componentDidMount() {
+    this.setState({
+      siteBanner: this.createSiteBannerComponent()
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(prevState.currentLanguage !== this.state.currentLanguage) {
+      this.setState({
+        siteBanner: this.createSiteBannerComponent()
+      })
+    }
+  }
+
+
+  handleClickSearchType = (value, event) => {
     event.preventDefault();
 
     switch (value) {
@@ -35,88 +55,85 @@ class App extends Component {
     console.log(value);
   };
 
-  handleLanguageSelectChange = (event) => {
-    this.setState({language: event.target.value});
+  handleClickBannerLanguageSelectChange = (value) => {
+    this.setState({
+      currentLanguage: value
+    })
   }
 
-  createHandlers = () => {
-    const handlers = {};
-    const navItemsValues = [
-      siteStrings.english.homepage,
-      siteStrings.english.inspiration,
-      siteStrings.english.destination,
-    ];
 
-    // ensuring that when the handleClick method is invoked that a value
-    // is passed through which will inform the method what element was clicked.
-    navItemsValues.forEach((value) => {
-      handlers[value] = this.handleClick.bind(this, value)
-    });
+  createSiteBannerComponent = () => {
+    const currentLang = this.state.currentLanguage
 
-    return handlers;
-  }
-
-  createSiteBannerNavItems = () => {
-    const handlers = this.state.handlers;
-    const language = this.state.language;
-    const english = siteStrings.english;
-
-    const searchTitle = (
-      <li key={nanoid()}>
-        {siteStrings[language].searchTitle}
-      </li>
-    );
-
-    const inspirationLink = (
-      <ListAnchor url={this.state.url} path="inspiration-search" handleClick={handlers[english.inspiration]} displayValue={siteStrings[language].inspiration} key={nanoid()} />
-    );
-
-    const destinationLink = (
-      <ListAnchor url={this.state.url} path="destination-search" handleClick={handlers[english.destination]} displayValue={siteStrings[language].destination} key={nanoid()}/>
-    );
-
-    return [searchTitle, inspirationLink, destinationLink];
-  }
-
-  render() {
-    // Preparing props for Logo component
     const logoDetails = {
-      domainUrl: this.state.url,
-      altText: siteStrings[this.state.language].altLogoImg,
-      handleClick: this.state.handlers[siteStrings.english.homepage],
+      domainUrl: this.state.domain,
+      altText: siteStrings[currentLang].altLogoImg,
+      handleClick: this.handleClickSearchType.bind(this, siteStrings.english.homepage),
       id: "site-banner-logo"
     }
 
+    const prepareLanguageSelectDetails = () => {
+      const supportedLangs = siteStrings.languages.sort();
+      const languageConverterToOriginalLang = {};
+      const languageConverterToCurrentLang = {};
+      const wordForLanguage = siteStrings[currentLang].wordForLanguage;
 
-    // Preparing props for LanguageSelect component
-    const supportedLangs = siteStrings.languages.sort();
-    const languageConverterToOriginalLang = {};
-    const languageConverterToCurrentLang = {};
-    const currLang = this.state.language;
+      const wrapperForOnClick = (value) => {
+        this.handleClickBannerLanguageSelectChange(value);
+      }
 
-    supportedLangs.forEach((lang) => {
-      const langInOrig = siteStrings[lang][lang];
-      languageConverterToOriginalLang[lang] = langInOrig;
-      languageConverterToCurrentLang[lang] = siteStrings[currLang][lang];
-    })
+      supportedLangs.forEach((lang) => {
+        const langInOrig = siteStrings[lang][lang];
+        languageConverterToOriginalLang[lang] = langInOrig;
+        languageConverterToCurrentLang[lang] = siteStrings[currentLang][lang];
+      })
 
-    const langSelectDetails = {
-      supportedLangs: supportedLangs,
-      languageConverterToOriginalLang: languageConverterToOriginalLang,
-      languageConverterToCurrentLang: languageConverterToCurrentLang,
-      currentLang: currLang,
-      handleChange: this.handleLanguageSelectChange,
-      idCreater: nanoid
+      return {
+        supportedLangs: supportedLangs,
+        languageConverterToOriginalLang: languageConverterToOriginalLang,
+        languageConverterToCurrentLang: languageConverterToCurrentLang,
+        currentLang: currentLang,
+        handleClickAppWrapper: wrapperForOnClick,
+        idCreater: nanoid,
+        currentLangWordForEnglishWordLanguage: wordForLanguage,
+      }
     }
+    const languageSelectDetails = prepareLanguageSelectDetails()
 
+    const createSiteBannerNavItems = () => {
+      const language = this.state.currentLanguage;
+      const english = siteStrings.english;
+      const searchTypes = siteStrings.searchTypes;
 
-    // Creation of SiteBanner
+      return searchTypes.map((searchType) => {
+        const handleClick = this.handleClickSearchType.bind(this, english[searchType]);
+        return (
+          <ListAnchor url={this.state.domain}
+            path={siteStrings.searchPaths[searchType]}
+            handleClick={handleClick}
+            displayValue={siteStrings[language][searchType]} key={nanoid()} />
+        )
+      })
+    }
+    const navItems = createSiteBannerNavItems();
+
     return (
-        <SiteBanner displayNav={this.state.displayNav}
-                    logoDetails={logoDetails}
-                    langSelectDetails={langSelectDetails}
-                    navItems={this.createSiteBannerNavItems()}/>
-    );
+      <SiteBanner displayNav={this.state.displayNav}
+                  logoDetails={logoDetails}
+                  langSelectDetails={languageSelectDetails}
+                  navItems={navItems}
+                  searchTitle={siteStrings[currentLang].searchTitle}/>
+    )
+  }
+
+
+  render() {
+
+    return (
+      <Fragment>
+        {this.state.siteBanner}
+      </Fragment>
+    )
   }
 
 }

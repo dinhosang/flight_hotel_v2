@@ -1,5 +1,10 @@
 const siteStrings = {
   languages: ['english', 'portuguese', 'italian'],
+  searchTypes: ['inspiration', 'destination'],
+  searchPaths: {
+    inspiration: "inspiration-search",
+    destination: "destination-search"
+  },
   english: {
     english: "English",
     portuguese: "Portuguese",
@@ -8,7 +13,8 @@ const siteStrings = {
     searchTitle: "Search Type",
     inspiration: "Inspiration",
     destination: "Destination",
-    altLogoImgText: "logo for site, and link to home page"
+    altLogoImgText: "logo for site, and link to home page",
+    wordForLanguage: "language"
   },
   portuguese: {
     english: "Inglês",
@@ -17,8 +23,9 @@ const siteStrings = {
     homepage: "Homepage",
     searchTitle: "Search Type",
     inspiration: "Inspiration",
-    destination: "Destination",
-    altLogoImgText: "logo for site, and link to home page"
+    destination: "Destino",
+    altLogoImgText: "logo for site, and link to home page",
+    wordForLanguage: "language"
   },
   italian: {
     english: "Inglese",
@@ -27,8 +34,9 @@ const siteStrings = {
     homepage: "Homepage",
     searchTitle: "Search Type",
     inspiration: "Inspiration",
-    destination: "Destination",
-    altLogoImgText: "logo for site, and link to home page"
+    destination: "Destinazione",
+    altLogoImgText: "logo for site, and link to home page",
+    wordForLanguage: "language"
   }
 };
 
