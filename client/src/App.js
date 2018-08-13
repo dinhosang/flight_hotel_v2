@@ -95,7 +95,7 @@ class App extends Component {
         currentLang: currentLang,
         handleClickAppWrapper: wrapperForOnClick,
         idCreater: nanoid,
-        currentLangWordForEnglishWordLanguage: wordForLanguage,
+        summary: wordForLanguage,
       }
     }
     const languageSelectDetails = prepareLanguageSelectDetails()
@@ -121,6 +121,7 @@ class App extends Component {
       <SiteBanner displayNav={this.state.displayNav}
                   logoDetails={logoDetails}
                   langSelectDetails={languageSelectDetails}
+                  userOptionsDetails={{summary: "User"}}
                   navItems={navItems}
                   searchTitle={siteStrings[currentLang].searchTitle}/>
     )

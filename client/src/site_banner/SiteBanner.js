@@ -3,6 +3,7 @@ import React, { Fragment } from 'react';
 import NavList from '../common_components/NavList.js';
 import AnchorImage from '../common_components/AnchorImage.js';
 import LanguageSelect from './LanguageSelect.js';
+import UserOptions from './UserOptions.js';
 
 import logoImage from './logo.png';
 
@@ -17,6 +18,9 @@ const SiteBanner = (props) => {
   const languageSelect = (
     <LanguageSelect {...props.langSelectDetails} />
   )
+  const userOptions = (
+    <UserOptions {...props.userOptionsDetails} />
+  )
 
   return (
     <Fragment>
@@ -24,6 +28,7 @@ const SiteBanner = (props) => {
       <p>{props.searchTitle}</p>
       <NavList navItems={props.navItems} display={props.displayNav}/>
       {languageSelect}
+      {userOptions}
     </Fragment>
   );
 }

@@ -12,7 +12,6 @@ class LanguageSelect extends Component {
 
   handleDetailsSummaryClick = (event) => {
     event.preventDefault();
-    console.log('hi');
     this.setState((prevState) => {
       return {
         open: !prevState.open
@@ -64,7 +63,7 @@ class LanguageSelect extends Component {
       <Details id="language-select"
         open={this.state.open}
         handleClick={this.handleDetailsSummaryClick}
-        summary={this.props.currentLangWordForEnglishWordLanguage}>
+        summary={this.props.summary}>
         {this.createLanguagesList()}
       </Details>
     )
