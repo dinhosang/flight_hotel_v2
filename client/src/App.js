@@ -90,8 +90,11 @@ class App extends Component {
         languageConverterToCurrentLang: languageConverterToCurrentLang,
         currentLang: currentLang,
         handleClick: this.handleClickBannerLanguageSelectChange,
-        idCreater: nanoid,
+        keyCreater: nanoid,
         summary: wordForLanguage,
+        // would be nice to have these ids also be constants
+        // but would need a way to use same constants in css file
+        // perhaps SASS can do that?
       }
     }
     const languageSelectDetails = prepareLanguageSelectDetails()
@@ -113,11 +116,17 @@ class App extends Component {
     }
     const navItems = createSiteBannerNavItems();
 
+    const userOptionsDetails = {
+      summary: "User",
+      handleClick: (value) => {
+        console.log(value);
+      }
+    }
     return (
       <SiteBanner displayNav={this.state.displayNav}
                   logoDetails={logoDetails}
                   langSelectDetails={languageSelectDetails}
-                  userOptionsDetails={{summary: "User"}}
+                  userOptionsDetails={userOptionsDetails}
                   navItems={navItems}
                   searchTitle={siteStrings[currentLang].searchTitle}/>
     )
