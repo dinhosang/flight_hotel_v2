@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Details from '../common_components/Details.js';
 
 class LanguageSelect extends Component {
 
@@ -57,30 +58,14 @@ class LanguageSelect extends Component {
   }
 
   render() {
-    let finalDetails;
-    if(this.state.detailsOpen) {
-      finalDetails = (
-        <details id="user-options" open>
-          <summary onClick={this.handleLanguageListOpenClick}>
-            <p>{this.props.currentLangWordForEnglishWordLanguage}</p>
-            <span className="dropdown-caret"></span>
-          </summary>
-          {this.createLanguagesList()}
-        </details>
-      )
-    } else {
-      finalDetails = (
-        <details id="user-options">
-          <summary onClick={this.handleLanguageListOpenClick}>
-            <p>{this.props.currentLangWordForEnglishWordLanguage}</p>
-            <span className="dropdown-caret"></span>
-          </summary>
-          {this.createLanguagesList()}
-        </details>
-      )
-    }
 
-    return finalDetails;
+    return (
+      <Details id="language-select"
+        handleClick={this.handleLanguageListOpenClick}
+        summary={this.props.currentLangWordForEnglishWordLanguage}>
+        {this.createLanguagesList()}
+      </Details>
+    )
   }
 
 
