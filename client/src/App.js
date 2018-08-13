@@ -115,7 +115,10 @@ class App extends Component {
       })
     }
     const navItems = createSiteBannerNavItems();
-
+    const navDetails = {
+      navItems: navItems,
+      navTitle: siteStrings[currentLang].searchTitle
+    }
     const userOptionsDetails = {
       summary: "User",
       handleClick: (value) => {
@@ -127,8 +130,7 @@ class App extends Component {
                   logoDetails={logoDetails}
                   langSelectDetails={languageSelectDetails}
                   userOptionsDetails={userOptionsDetails}
-                  navItems={navItems}
-                  searchTitle={siteStrings[currentLang].searchTitle}/>
+                  navDetails={navDetails}/>
     )
   }
 

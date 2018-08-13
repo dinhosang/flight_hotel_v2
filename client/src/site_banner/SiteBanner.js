@@ -22,18 +22,10 @@ const SiteBanner = (props) => {
     <UserOptions {...props.userOptionsDetails} />
   )
 
-  let searchTitle;
-  if(props.displayNav || props.displayNav === "undefined") {
-    searchTitle = <p>{props.searchTitle}</p>
-  } else {
-    searchTitle = <p className="hidden">{props.searchTitle}</p>
-  }
-
   return (
     <Fragment>
       {siteLogo}
-      {searchTitle}
-      <NavList navItems={props.navItems} display={props.displayNav}/>
+      <NavList {...props.navDetails} display={props.displayNav}/>
       {languageSelect}
       {userOptions}
     </Fragment>

@@ -4,6 +4,7 @@ const NavList = (props) => {
   if(props.display === "undefined" || props.display) {
     return (
       <nav id={props.id}>
+        <p>{props.navTitle}</p>
         <ul>
           {props.navItems}
         </ul>
@@ -12,6 +13,7 @@ const NavList = (props) => {
   } else {
     return (
       <nav id={props.id} className="hidden">
+        <p>{props.navTitle}</p>
         <ul>
           {props.navItems}
         </ul>
