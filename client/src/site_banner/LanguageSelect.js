@@ -14,15 +14,19 @@ const LanguageSelect = (props) => {
       const handleClick = handleClickWrapper.bind(this, language)
       if(language !== props.currentLang) {
         return (
-          <li key={keyCreater()} onClick={handleClick}>
-            {`${languageConverterToOriginalLang[language]}`
-            + ` (${languageConverterToCurrentLang[language]})`}
+          <li key={keyCreater()} tabIndex="0" onClick={handleClick} onKeyUp={handleClick}>
+            <a>
+              {`${languageConverterToOriginalLang[language]}`
+              + ` (${languageConverterToCurrentLang[language]})`}
+            </a>
           </li>
         )
       } else {
         return (
-          <li key={keyCreater()}  onClick={handleClick}>
-            {languageConverterToOriginalLang[language]}
+          <li key={keyCreater()} tabIndex="0" onClick={handleClick} onKeyUp={handleClick}>
+            <a>
+              {languageConverterToOriginalLang[language]}
+            </a>
           </li>
         )
       }
@@ -40,7 +44,8 @@ const LanguageSelect = (props) => {
         listId="language-select-list"
         createList={createList}
         handleClick={props.handleClick}
-        summary={props.summary} />
+        summary={props.summary}
+        span={props.span} />
   )
 }
 

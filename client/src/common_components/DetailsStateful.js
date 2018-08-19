@@ -31,11 +31,26 @@ class DetailsStateful extends Component {
     })
   }
 
-  handleClickLocalWrapper = (value) => {
-    this.setState({
-      open: false
-    })
-    this.props.handleClick(value)
+  handleClickLocalWrapper = (value, event) => {
+    // need to look up way to store focus before reaching menu
+    // so that focus can be returned should one of the options be clicked
+    // I think that's a usability spec? Could store focus in state when
+    // summary is clicked or entered and use that focus shuold the below
+    // expression resolve false
+
+    // if false it means that a keyboard key was pressed and it was not enter
+    // enter keyCode is 13
+    // this should run the code in 'else' event is type click or if enter is
+    // pressed.
+    if(event.type === 'keyup' && event.keyCode !== 13){
+      return;
+    } else {
+      this.setState({
+        open: false
+      })
+      this.props.handleClick(value)
+    }
+
   }
 
   handleDocumentClick = (event) => {
@@ -79,7 +94,8 @@ class DetailsStateful extends Component {
       <Details id={this.props.id}
         open={this.state.open}
         handleClick={this.handleDetailsSummaryClick}
-        summary={this.props.summary}>
+        summary={this.props.summary}
+        span={this.props.span}>
         {createList(this.props.listId, this.handleClickLocalWrapper)}
       </Details>
     )

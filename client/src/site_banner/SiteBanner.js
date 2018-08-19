@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import NavList from '../common_components/NavList.js';
 import AnchorImage from '../common_components/AnchorImage.js';
@@ -6,6 +6,8 @@ import LanguageSelect from './LanguageSelect.js';
 import UserOptions from './UserOptions.js';
 
 import logoImage from './logo.png';
+import './SiteBanner.css';
+import './details.css';
 
 const SiteBanner = (props) => {
 
@@ -13,22 +15,18 @@ const SiteBanner = (props) => {
   // know the individual keys on the prop objects, instead just passing
   // it wholesale, making future modifications easier to instate.
   const siteLogo = (
-    <AnchorImage image={logoImage} {...props.logoDetails} />
+    <AnchorImage image={logoImage} {...props.logoDetails}/>
   );
-  const languageSelect = (
-    <LanguageSelect {...props.langSelectDetails} />
-  )
-  const userOptions = (
-    <UserOptions {...props.userOptionsDetails} />
-  )
 
   return (
-    <Fragment>
+    <header id="site-banner">
+      <span className='col-span-3'/>
       {siteLogo}
-      <NavList {...props.navDetails} display={props.displayNav}/>
-      {languageSelect}
-      {userOptions}
-    </Fragment>
+      <NavList {...props.navDetails} id="site-banner-nav" display={props.displayNav}/>
+      <LanguageSelect {...props.langSelectDetails} />
+      <UserOptions {...props.userOptionsDetails} />
+      <span className='col-span-3'/>
+    </header>
   );
 }
 

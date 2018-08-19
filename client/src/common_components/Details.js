@@ -5,7 +5,7 @@ const Details = (props) => {
 
   if(props.open) {
     finalDetails = (
-      <details id={props.id} open>
+      <details id={props.id} className={props.span} open>
         <summary onClick={props.handleClick}>
           {props.summary}
           <span className="dropdown-caret"></span>
@@ -15,7 +15,7 @@ const Details = (props) => {
     )
   } else {
     finalDetails = (
-      <details id={props.id}>
+      <details id={props.id} className={props.span}>
         <summary onClick={props.handleClick}>
           {props.summary}
           <span className="dropdown-caret"></span>

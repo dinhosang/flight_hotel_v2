@@ -1,0 +1,41 @@
+details {
+  padding-top: 1rem;
+}
+
+summary {
+  /* to remove default widget on summary -  not accepted by chrome */
+  list-style: none;
+  font-size: 0.8rem;
+}
+
+/* to remove default widget on summary - in chrome etc. */
+summary::-webkit-details-marker {
+  display: none;
+}
+
+.dropdown-caret {
+  vertical-align: middle;
+  display: inline-block;
+
+  margin-left: 3%;
+
+  border: solid 4px;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+}
+
+details ul {
+  /* Inline block auto sizes width to match child elements! */
+  display: inline-block;
+  /* removes the bullet points left by default */
+  list-style: none;
+
+  border: solid 1px;
+  background-color: white;
+
+  margin-top: 0.3rem;
+  padding: 0.5rem;
+
+  color: black;
+}

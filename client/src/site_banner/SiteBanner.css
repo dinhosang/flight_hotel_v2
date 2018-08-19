@@ -1,0 +1,60 @@
+#site-banner {
+  display: flex;
+  height: 2.5rem;
+  /* background-color: #ABA6BF; */
+  /* background-color: #595775; */
+  /* background-color: #583E2E; */
+  background-color: #F1E0D6;
+  /* background-color: #BF988F; */
+
+  background-color: #040C0E;
+  /* background-color: #132226; */
+  /* background-color: #525B56; */
+  /* background-color: #BE9063; */
+  /* background-color: #A4978E; */
+
+  border-bottom: solid black 1px;
+  color: white;
+}
+
+#site-banner-nav {
+  display: flex;
+}
+
+#site-banner-nav ul {
+  /* width: 100%; */
+  height: 100%;
+  display: flex;
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+#site-banner-nav ul li {
+  width: 8rem;
+  height:100%;
+}
+
+#site-banner-nav ul li a {
+  /* display block is required to have a fill out to li's size, otherwise
+  calls to height and width are not given any attention */
+  display: block;
+  height: 100%;
+  width: 100%;
+
+  padding-top: 1rem;
+  padding-left: 1.65rem;
+
+  /* remove underlines that is default for a tags */
+  text-decoration: none;
+  color: inherit;
+}
+
+#site-banner-logo {
+  padding-left: 1.5%;
+}
+
+#site-banner-logo img {
+  background-color: white;
+  border-radius: 2rem;
+}

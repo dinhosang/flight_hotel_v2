@@ -6,7 +6,8 @@ import ListAnchor from './common_components/ListAnchor.js';
 
 import siteStrings from './resources/site_strings.js';
 
-// import './App.css';
+import './normalize.css';
+import './App.css';
 
 class App extends Component {
 
@@ -32,6 +33,10 @@ class App extends Component {
     })
   }
 
+  // below needs to contain any components that are rendered in the render() of
+  // this component who receive props from this state. This ensures that when
+  // state is updated that all relevent components are also updated and
+  // re-rendered.
   componentDidUpdate(prevProps, prevState) {
     if(prevState.currentLanguage !== this.state.currentLanguage) {
       this.setState({
@@ -69,7 +74,8 @@ class App extends Component {
       domainUrl: this.state.domain,
       altText: siteStrings[currentLang].altLogoImg,
       handleClick: this.handleClickSearchType.bind(this, siteStrings.english.homepage),
-      id: "site-banner-logo"
+      id: "site-banner-logo",
+      span: "col-span-1"
     }
 
     const prepareLanguageSelectDetails = () => {
@@ -92,6 +98,7 @@ class App extends Component {
         handleClick: this.handleClickBannerLanguageSelectChange,
         keyCreater: nanoid,
         summary: wordForLanguage,
+        span: "col-span-1"
         // would be nice to have these ids also be constants
         // but would need a way to use same constants in css file
         // perhaps SASS can do that?
@@ -117,10 +124,11 @@ class App extends Component {
     const navItems = createSiteBannerNavItems();
     const navDetails = {
       navItems: navItems,
-      navTitle: siteStrings[currentLang].searchTitle
+      span: "col-span-7"
     }
     const userOptionsDetails = {
       summary: "User",
+      span: "col-span-1",
       handleClick: (value) => {
         console.log(value);
       }

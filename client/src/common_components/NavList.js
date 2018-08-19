@@ -3,8 +3,7 @@ import React from 'react';
 const NavList = (props) => {
   if(props.display === "undefined" || props.display) {
     return (
-      <nav id={props.id}>
-        <p>{props.navTitle}</p>
+      <nav id={props.id} className={props.span}>
         <ul>
           {props.navItems}
         </ul>
@@ -12,8 +11,7 @@ const NavList = (props) => {
     );
   } else {
     return (
-      <nav id={props.id} className="hidden">
-        <p>{props.navTitle}</p>
+      <nav id={props.id} className={`hidden ${props.span}`}>
         <ul>
           {props.navItems}
         </ul>
