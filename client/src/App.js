@@ -3,6 +3,7 @@ import nanoid from 'nanoid';
 
 import SiteBanner from './site_banner/SiteBanner.js';
 import ListAnchor from './common_components/ListAnchor.js';
+import SiteMain from './site_main/SiteMain.js';
 
 import siteStrings from './resources/site_strings.js';
 
@@ -148,6 +149,7 @@ class App extends Component {
     return (
       <Fragment>
         {this.state.siteBanner}
+        <SiteMain language={this.state.currentLanguage} />
       </Fragment>
     )
   }

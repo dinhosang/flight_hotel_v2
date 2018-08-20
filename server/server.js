@@ -57,8 +57,8 @@ server.use(express.urlencoded({extended: true}));
 // compress response bodies to reduce size of packet sent to client browser
 server.use(compression());
 
-server.use('/search', searchRouter);
-server.use('/accounts', accountsRouter);
+server.use('/api/search', searchRouter);
+server.use('/api/accounts', accountsRouter);
 
 server.use(response404LoggingMiddleware);
 

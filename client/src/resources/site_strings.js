@@ -11,6 +11,10 @@ const siteStrings = {
     italian: "Italian",
     homepage: "Homepage",
     inspiration: "Inspiration",
+    inspFormHeader: "Inspiration Search - Select your origin from the available list, and find your dream destination.",
+    originInput: "Origin: (required)",
+    departDate: "Departure Date: (required)",
+    returnDate: "Return Date: (required)",
     destination: "Destination",
     altLogoImgText: "logo for site, and link to home page",
     wordForLanguage: "language"
@@ -21,6 +25,10 @@ const siteStrings = {
     italian: "Italiano",
     homepage: "Homepage",
     inspiration: "Inspiration",
+    inspFormHeader: "Inspiration Search - Select your origin from the available list, and find your dream destination.",
+    originInput: "Origin: (required)",
+    departDate: "Departure Date: (required)",
+    returnDate: "Return Date: (required)",
     destination: "Destino",
     altLogoImgText: "logo for site, and link to home page",
     wordForLanguage: "language"
@@ -31,6 +39,10 @@ const siteStrings = {
     italian: "Italiano",
     homepage: "Homepage",
     inspiration: "Inspiration",
+    inspFormHeader: "Inspiration Search - Select your origin from the available list, and find your dream destination.",
+    originInput: "Origin: (required)",
+    departDate: "Departure Date: (required)",
+    returnDate: "Return Date: (required)",
     destination: "Destinazione",
     altLogoImgText: "logo for site, and link to home page",
     wordForLanguage: "language"
