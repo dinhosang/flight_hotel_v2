@@ -15,6 +15,22 @@ const siteStrings = {
     originInput: "Origin: (required)",
     departDate: "Departure Date: (required)",
     returnDate: "Return Date: (required)",
+    seatClass: {
+      label: "Preferred Seat Type: (required)",
+      economy: "Economy",
+      premiumEconomy: "Premium Economy",
+      business: "Business",
+      first: "First"
+    },
+    currencySelectLabel: "Currency: (origin's by default)",
+    directCheckboxLabel: "Direct Flights Only:",
+    ticketsDesired: {
+      label: "Tickets Required",
+      adult: "Adult:",
+      children: "Children (3-17yrs):",
+      infant: "Infants (0-2yrs):"
+    },
+    submit: "Submit",
     destination: "Destination",
     altLogoImgText: "logo for site, and link to home page",
     wordForLanguage: "language"
@@ -29,6 +45,22 @@ const siteStrings = {
     originInput: "Origin: (required)",
     departDate: "Departure Date: (required)",
     returnDate: "Return Date: (required)",
+    seatClass: {
+      label: "Preferred Seat Type: (required)",
+      economy: "Economy",
+      premiumEconomy: "Premium Economy",
+      business: "Business",
+      first: "First"
+    },
+    currencySelectLabel: "Currency: (origin's by default)",
+    directCheckboxLabel: "Direct Flights Only:",
+    ticketsDesired: {
+      label: "Tickets Required",
+      adult: "Adult:",
+      children: "Children (3-17yrs):",
+      infant: "Infants (0-2yrs):"
+    },
+    submit: "Submit",
     destination: "Destino",
     altLogoImgText: "logo for site, and link to home page",
     wordForLanguage: "language"
@@ -43,6 +75,22 @@ const siteStrings = {
     originInput: "Origin: (required)",
     departDate: "Departure Date: (required)",
     returnDate: "Return Date: (required)",
+    seatClass: {
+      label: "Preferred Seat Type: (required)",
+      economy: "Economy",
+      premiumEconomy: "Premium Economy",
+      business: "Business",
+      first: "First"
+    },
+    currencySelectLabel: "Currency: (origin's by default)",
+    directCheckboxLabel: "Direct Flights Only:",
+    ticketsDesired: {
+      label: "Tickets Required",
+      adult: "Adult:",
+      children: "Children (3-17yrs):",
+      infant: "Infants (0-2yrs):"
+    },
+    submit: "Submit",
     destination: "Destinazione",
     altLogoImgText: "logo for site, and link to home page",
     wordForLanguage: "language"
