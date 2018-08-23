@@ -7,7 +7,7 @@ const SpanInputDate = (props) => {
     <SpanInput {...props}>
       <input id={props.fieldId} type="date"
         onChange={props.handleChange}
-        value={props.value || ""}
+        value={props.value}
         name={props.fieldId} />
     </SpanInput>
   );

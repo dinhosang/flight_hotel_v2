@@ -4,11 +4,10 @@ const SpanButton = (props) => {
   return (
     <span className={props.classesString}
       id={props.id}>
-        <button type="button"
+        <input type="submit"
           id={props.buttonId}
-          className={props.buttonClassesString}>
-            {props.buttonText}
-        </button>
+          className={props.buttonClassesString}
+          value={props.buttonText} />
     </span>
   );
 }

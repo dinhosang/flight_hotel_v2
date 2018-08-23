@@ -6,7 +6,7 @@ const SpanInputCheckbox = (props) => {
   return (
     <SpanInput {...props}>
         <input id={props.fieldId} type="checkbox"
-           checked={props.isChecked || false}
+           checked={props.isChecked}
            onChange={props.handleChange}
            name={props.fieldId} />
     </SpanInput>
