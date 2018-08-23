@@ -8,6 +8,7 @@ const SpanInputDate = (props) => {
       <input id={props.fieldId} type="date"
         onChange={props.handleChange}
         value={props.value}
+        disabled={props.isDisabled}
         name={props.fieldId}
         onBlur={props.handleBlur}/>
     </SpanInput>

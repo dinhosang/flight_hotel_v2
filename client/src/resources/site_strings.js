@@ -43,7 +43,8 @@ const siteStrings = {
         "return-date": {
           "empty": "Please complete return date field.",
           "tooEarly": "Return date must be a minimum of one day after departure date.",
-          "tooFar": "Return date must be no later than 15 days after departure date."
+          "tooFar": "Return date must be no later than 15 days after departure date.",
+          "missingDepart": "Please enter a departure date before selecting a return date."
         },
         "currency-select": {
           "invalid": "Please select a valid currency from the list, or leave cleared to use origin's currency."
@@ -93,7 +94,8 @@ const siteStrings = {
         "return-date": {
           "empty": "Please complete return date field.",
           "tooEarly": "Return date must be a minimum of one day after departure date.",
-          "tooFar": "Return date must be no later than 15 days after departure date."
+          "tooFar": "Return date must be no later than 15 days after departure date.",
+          "missingDepart": "Please enter a departure date before selecting a return date."
         },
         "currency-select": {
           "invalid": "Please select a valid currency from the list, or leave cleared to use origin's currency."
@@ -143,7 +145,8 @@ const siteStrings = {
         "return-date": {
           "empty": "Please complete return date field.",
           "tooEarly": "Return date must be a minimum of one day after departure date.",
-          "tooFar": "Return date must be no later than 15 days after departure date."
+          "tooFar": "Return date must be no later than 15 days after departure date.",
+          "missingDepart": "Please enter a departure date before selecting a return date."
         },
         "currency-select": {
           "invalid": "Please select a valid currency from the list, or leave cleared to use origin's currency."

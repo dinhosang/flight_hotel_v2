@@ -21,26 +21,28 @@ class InspirationSearchForm extends Component {
     this.state = {
       originOptions: this.setupOrigins(),
       currencyList: this.setupCurrencies(),
-      "origin-list": "",
-      "depart-date": {
-        value: "",
-        dateObject: ""
-      },
-      "return-date": {
-        value: "",
-        dateObject: ""
-      },
-      "seat-class": "ECONOMY",
-      "currency-select": "",
-      "direct-flight-checkbox": false,
-      "adult-tickets": 1,
-      "children-tickets": 0,
-      "infant-tickets": 0,
       required: [
         "origin-list",
         "depart-date",
         "return-date"
       ],
+      fieldValues: {
+        "origin-list": "",
+        "depart-date": {
+          value: "",
+          dateObject: ""
+        },
+        "return-date": {
+          value: "",
+          dateObject: ""
+        },
+        "seat-class": "ECONOMY",
+        "currency-select": "",
+        "direct-flight-checkbox": false,
+        "adult-tickets": 1,
+        "children-tickets": 0,
+        "infant-tickets": 0
+      },
       attemptedSubmission: {
         failed: false,
         requiredFieldsAreEmpty: {
@@ -209,7 +211,8 @@ class InspirationSearchForm extends Component {
     this.state.required.forEach( field => {
       // first check is for origin-list, second is for depart/return dates
       // which are stored in a different structure to the origin in the state.
-      if (this.state[field] === "" || this.state[field].value === "") {
+      if (this.state.fieldValues[field] === ""
+          || this.state.fieldValues[field].value === "") {
         fieldChecks.failed = true;
         const fieldStatus = fieldChecks.requiredFieldsAreEmpty[field];
         const strings = this.state.strings.formSubmissionErrors;
@@ -223,20 +226,29 @@ class InspirationSearchForm extends Component {
   handleInputChange = (event) => {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
 
     switch (target.type) {
       case "date":
-        this.setState({
-          [target.name]: {
+        this.setState(prevState => {
+          const prevFieldValues = prevState.fieldValues
+          prevFieldValues[name] = {
             value: value,
             dateObject: new Date(value)
+          }
+          return {
+            fieldValues: prevFieldValues
           }
         });
         break;
       default:
-        this.setState({
-          [target.name]: value
-        })
+        this.setState(prevState => {
+          const prevFieldValues = prevState.fieldValues;
+          prevFieldValues[name] = value;
+          return {
+            prevFieldValues
+          };
+        });
     }
   }
 
@@ -254,25 +266,25 @@ class InspirationSearchForm extends Component {
         // these and future if statements are to protect
         // against user just tabbing past empty fields
         // firing off methods that expect non-empty values
-        if(this.state["origin-list"] !== "") {
+        if(this.state.fieldValues["origin-list"] !== "") {
           this.checkOriginValid(fieldChecks);
           defaultStartingValue = false;
         }
         break;
       case "depart-date":
-        if(this.state["depart-date"].value !== "") {
+        if(this.state.fieldValues["depart-date"].value !== "") {
           this.checkDepartDateValid(fieldChecks);
           defaultStartingValue = false;
         }
         break;
       case "return-date":
-        if(this.state["return-date"].value !== "") {
+        if(this.state.fieldValues["return-date"].value !== "") {
           this.checkReturnDateValid(fieldChecks);
           defaultStartingValue = false;
         }
         break;
       case "currency-select":
-        if(this.state["currency-select"] !== "") {
+        if(this.state.fieldValues["currency-select"] !== "") {
           this.checkCurrencyValid(fieldChecks)
           defaultStartingValue = false;
         }
@@ -310,7 +322,7 @@ class InspirationSearchForm extends Component {
     // looking for one correct value, if found will set fail status
     // to false.
     this.state.currencyList.forEach(option => {
-      if(this.state["currency-select"] === option.props.value) {
+      if(this.state.fieldValues["currency-select"] === option.props.value) {
         fieldChecks.failed = false;
         field.invalid = false;
         field.reason = null;
@@ -330,7 +342,7 @@ class InspirationSearchForm extends Component {
     // looking for one correct value, if found will set fail status
     // to false.
     this.state.originOptions.forEach(option => {
-      if(this.state["origin-list"] === option.props.value) {
+      if(this.state.fieldValues["origin-list"] === option.props.value) {
         fieldChecks.failed = false;
         field.invalid = false;
         field.reason = null;
@@ -363,7 +375,7 @@ class InspirationSearchForm extends Component {
 
     // Date below was created as part of handleInputChange
     // for fields of type 'date'.
-    const inputDepartDate = this.state["depart-date"].dateObject;
+    const inputDepartDate = this.state.fieldValues["depart-date"].dateObject;
 
     // checking local date in milliseconds since 01/01/1970
     // to the inputDepartDate in milliseconds since 01/01/1970
@@ -386,8 +398,8 @@ class InspirationSearchForm extends Component {
     field.invalid = false;
     field.reason = null;
 
-    const inputReturnDate = this.state["return-date"].dateObject;
-    const inputDepartDate = this.state["depart-date"].dateObject;
+    const inputReturnDate = this.state.fieldValues["return-date"].dateObject;
+    const inputDepartDate = this.state.fieldValues["depart-date"].dateObject;
 
     // finds the difference in milliseconds
     const differenceMs = inputReturnDate - inputDepartDate;
@@ -431,6 +443,7 @@ class InspirationSearchForm extends Component {
   // for input spans - if applicable.
   prepareValuesForValidatedInput = (field) => {
     const statusChecker = this.state.attemptedSubmission;
+
     // grabs object containing valuess concerning emptiness of input
     const emptyChecker = statusChecker.requiredFieldsAreEmpty[field];
     // grabs objects containing values concerning validity of input
@@ -494,7 +507,7 @@ class InspirationSearchForm extends Component {
         labelString={this.state.strings.originInput}
         handleChange={this.handleInputChange}
         handleBlur={this.handleInputBlur}
-        value={this.state["origin-list"]}
+        value={this.state.fieldValues["origin-list"]}
         datalistId="origins"
         options={this.state.originOptions} />
     );
@@ -534,7 +547,7 @@ class InspirationSearchForm extends Component {
         classesString={departVal.classes}
         id="inspiration-depart-date-span"
         fieldId="depart-date"
-        value={this.state["depart-date"].value}
+        value={this.state.fieldValues["depart-date"].value}
         handleChange={this.handleInputChange}
         handleBlur={this.handleInputBlur}
         labelString={this.state.strings.departDate} />
@@ -548,12 +561,13 @@ class InspirationSearchForm extends Component {
     returnOption = (
       <SpanInputDate
         classesString={returnVal.classes}
-        id="inspiration-depart-date-span"
-        fieldId="depart-date"
-        value={this.state["depart-date"].value}
+        id="inspiration-return-date-span"
+        fieldId="return-date"
+        value={this.state.fieldValues["return-date"].value}
         handleChange={this.handleInputChange}
+        isDisabled={this.isReturnDateDisabled()}
         handleBlur={this.handleInputBlur}
-        labelString={this.state.strings.departDate} />
+        labelString={this.state.strings.returnDate} />
     )
     // assigns error message if necessary
     returnWarning = returnVal.error;
@@ -573,6 +587,18 @@ class InspirationSearchForm extends Component {
     );
   }
 
+  isReturnDateDisabled = () => {
+    const validChecker = this.state.attemptedSubmission;
+    const departChecker = validChecker.checkedFieldValuesInvalid["depart-date"];
+
+    const departInvalid = departChecker.invalid
+    const departValue = this.state.fieldValues["depart-date"].value;
+
+    // if depart date field is empty, or if its value is invalid
+    // then return date field should be disabled.
+    return (departValue === "" || departInvalid);
+  }
+
   // creates final two spans for third li for currency and error span
   // based on whether error exists.
   createCurrencyAndErrorSpan = () => {
@@ -585,7 +611,7 @@ class InspirationSearchForm extends Component {
         labelString={this.state.strings.currencySelectLabel}
         handleChange={this.handleInputChange}
         handleBlur={this.handleInputBlur}
-        value={this.state["currency-select"]}
+        value={this.state.fieldValues["currency-select"]}
         datalistId="currency-datalist"
         options={this.state.currencyList} />
     );
@@ -619,7 +645,7 @@ class InspirationSearchForm extends Component {
               classesString="col-span-5 insp-list-text-field"
               id="seat-class-span"
               fieldId="seat-class"
-              value={this.state["seat-class"]}
+              value={this.state.fieldValues["seat-class"]}
               handleChange={this.handleInputChange}
               labelString={this.state.strings.seatClass.label}>
                 <option value="ECONOMY">
@@ -642,14 +668,14 @@ class InspirationSearchForm extends Component {
               classesString="col-span-5"
               language={this.props.language}
               handleChange={this.handleInputChange}
-              adultTicketsValue={this.state["adult-tickets"]}
-              childrenTicketsValue={this.state["children-tickets"]}
-              infantTicketsValue={this.state["infant-tickets"]} />
+              adultTicketsValue={this.state.fieldValues["adult-tickets"]}
+              childrenTicketsValue={this.state.fieldValues["children-tickets"]}
+              infantTicketsValue={this.state.fieldValues["infant-tickets"]} />
             <SpanInputCheckbox
               classesString="col-span-5"
               id="direct-flight-checkbox-span"
               fieldId="direct-flight-checkbox"
-              isChecked={this.state["direct-flight-checkbox"]}
+              isChecked={this.state.fieldValues["direct-flight-checkbox"]}
               handleChange={this.handleInputChange}
               labelString={this.state.strings.directCheckboxLabel} />
             <SpanButton classesString="col-span-6"
