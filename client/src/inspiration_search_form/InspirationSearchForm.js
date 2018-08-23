@@ -52,7 +52,7 @@ class InspirationSearchForm extends Component {
     event.preventDefault();
 
     // checks origin, depart, and return fields are not at default
-    const requirementsPassed = this.checkRequiredFieldsFilled();
+    const requirementsPassed = this.isRequiredFieldsFilled();
     if(!requirementsPassed) {
       this.handleFailedSubmission();
       return;
@@ -60,28 +60,28 @@ class InspirationSearchForm extends Component {
 
     // checks origin value matches a value on one of the
     // datalist options.
-    const validOrigin = this.checkValidOrigin();
+    const validOrigin = this.isOriginValid();
     if(!validOrigin) {
       this.handleFailedSubmission();
       return;
     }
 
     // checks depart date is equal to or later than today's date
-    const validDepartDate = this.checkDepartDateValid();
+    const validDepartDate = this.isDepartDateValid();
     if(!validDepartDate) {
       this.handleFailedSubmission();
       return;
     }
 
     // checks return date is 1-15 days from depart date
-    const validReturnDate = this.checkReturnDateValid();
+    const validReturnDate = this.isReturnDateValid();
     if(!validReturnDate) {
       this.handleFailedSubmission();
       return;
     }
   }
 
-  // TODO: 
+  // TODO:
   // rendering should check this value, determine what caused
   // the failure, and inform user in some way
   // perhaps settings a class to display a red border?
@@ -93,7 +93,7 @@ class InspirationSearchForm extends Component {
     });
   }
 
-  checkReturnDateValid = () => {
+  isReturnDateValid = () => {
     let validReturnDate = false;
 
     const inputReturnDate = this.state["return-date"].dateObject;
@@ -123,7 +123,7 @@ class InspirationSearchForm extends Component {
     return validReturnDate;
   }
 
-  checkDepartDateValid = () => {
+  isDepartDateValid = () => {
     let validDepartDate = false;
 
     // creating date object using local time
@@ -155,7 +155,7 @@ class InspirationSearchForm extends Component {
     return validDepartDate;
   }
 
-  checkValidOrigin = () => {
+  isOriginValid = () => {
     let validOrigin = false;
     this.state.originOptions.forEach( option => {
       if(this.state["origin-list"] === option.props.value) {
@@ -165,7 +165,7 @@ class InspirationSearchForm extends Component {
     return validOrigin;
   }
 
-  checkRequiredFieldsFilled = () => {
+  isRequiredFieldsFilled = () => {
     let requirementsPassed = true;
     this.state.required.forEach( req => {
       if (this.state[req] === "") {
@@ -214,6 +214,7 @@ class InspirationSearchForm extends Component {
     return currencies;
   }
 
+  // TODO: convert to switch, prevent invalid depart dates here.
   handleInputChange = (event) => {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value;
