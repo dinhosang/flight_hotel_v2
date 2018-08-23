@@ -6,6 +6,7 @@ const SpanInputDatalist = (props) => {
   return(
     <SpanInput {...props}>
       <input list={props.datalistId} id={props.fieldId} name={props.fieldId} value={props.value} onChange={props.handleChange}
+      onBlur={props.handleBlur}
       autoComplete="off" />
       <datalist id={props.datalistId}>
         {props.options}

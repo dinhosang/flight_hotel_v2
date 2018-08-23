@@ -22,11 +22,11 @@ class InspirationSearchForm extends Component {
       currencyList: this.setupCurrencies(),
       "origin-list": "",
       "depart-date": {
-        string: "",
+        value: "",
         dateObject: ""
       },
       "return-date": {
-        string: "",
+        value: "",
         dateObject: ""
       },
       "seat-class": "ECONOMY",
@@ -42,182 +42,34 @@ class InspirationSearchForm extends Component {
       ],
       attemptedSubmission: {
         failed: false,
-        requiredFieldsEmpty: {
+        requiredFieldsAreEmpty: {
           "origin-list": false,
           "depart-date": false,
           "return-date": false
         },
-        invalidFieldValues: {
-          "origin-list": false,
-          "depart-date": false,
-          "return-date": false
-        }
-      }
-    };
-  }
-
-  // could be performed async with Promise.all for example
-  // but not even computation required in any of the called
-  // methods to require an async version, doing so may
-  // even slow things down.
-  handleSubmit = (event) => {
-    event.preventDefault();
-
-    // checks origin, depart, and return fields are not at default
-    const requirements = this.checkRequiredFieldsFilled();
-    if(!requirements.allPassed) {
-      const emptyFieldsCheck = {
-          failed: true,
-          requiredFieldsEmpty: {
-            "origin-list": false,
-            "depart-date": false,
-            "return-date": false
+        checkedFieldValuesInvalid: {
+          "origin-list": {
+            invalid: false,
+            reason: null
+          },
+          "depart-date": {
+            invalid: false,
+            reason: null
+          },
+          "return-date": {
+            invalid: false,
+            reason: null
+          },
+          "currency-select": {
+            invalid: false,
+            reason: null
           }
         }
-      requirements.emptyFields.forEach( field => {
-        emptyFieldsCheck.requiredFieldsEmpty[field] = true;
-      })
-
-      this.handleFailedSubmission(emptyFieldsCheck);
-    }
-
-
-    const fieldValuesCheck = {
-      failed: false,
-      invalidFieldValues: {
-        "origin-list": false,
-        "depart-date": false,
-        "return-date": false
-      }
-    }
-    // TODO: modify below so that instead of returning booleans
-    // they take in above object and assign values as needed
-    // per the results of the check. Perhaps change values of
-    // attributes in invalidFieldValues object to be objects
-    // themselves with a boolean and a string detailing the
-    // nature of the error?
-
-    // checks origin value matches a value on one of the
-    // datalist options.
-    const validOrigin = this.isOriginValid();
-    if(!validOrigin) {
-      fieldValuesCheck.failed = true;
-      fieldValuesCheck.invalidFieldValues["origin-list"] = true;
-    }
-    // checks depart date is equal to or later than today's date
-    const validDepartDate = this.isDepartDateValid();
-    if(!validDepartDate) {
-      fieldValuesCheck.failed = true;
-      fieldValuesCheck.invalidFieldValues["depart-date"] = true;
-    }
-    // checks return date is 1-15 days from depart date
-    const validReturnDate = this.isReturnDateValid();
-    if(!validReturnDate) {
-      fieldValuesCheck.failed = true;
-      fieldValuesCheck.invalidFieldValues["return-date"] = true;
-    }
-    if(fieldValuesCheck.failed){
-      this.handleFailedSubmission(fieldValuesCheck);
-    }
-  }
-
-  // TODO:
-  // rendering should check this value and inform user in some way
-  // perhaps settings a class to display a red border?
-  // and perhaps assign text as final span to lis containing
-  // invalid input?
-  handleFailedSubmission = (results) => {
-    this.setState({
-      attemptedSubmission: results
-    });
-  }
-
-  isReturnDateValid = () => {
-    let validReturnDate = false;
-
-    const inputReturnDate = this.state["return-date"].dateObject;
-    const inputDepartDate = this.state["depart-date"].dateObject;
-
-    // finds the difference in milliseconds
-    const differenceMs = inputReturnDate - inputDepartDate;
-    // creates an object with a date based on the milliseconds
-    // after 01/01/1970
-    const differenceDateObject = new Date(differenceMs);
-    /*
-    * grabs date value which will be the number of days between
-    * the input depart and return dates.
-    * starts at a baseline of a full day, so need to remove 1
-    * from differenceDays to achieve an accurant value
-
-    * For instance 2018/02/20 - 2018/02/20 entered into
-    * a new date object would return a day below of 1, rather
-    * than 0, as long as the times in ms are not exactly the same.
-    */
-    const differenceDays = differenceDateObject.getDate() - 1;
-    // amadeus API only accepts durations between 1 and 15
-    // inclusive. No returning the same day, or 16 days later.
-    if(differenceDays >= 1 && differenceDays <= 15) {
-      validReturnDate = true;
-    }
-    return validReturnDate;
-  }
-
-  isDepartDateValid = () => {
-    let validDepartDate = false;
-
-    // creating date object using local time
-    const localDate = new Date();
-
-    // setting to earliest point possible in said date
-    localDate.setHours(0);
-    localDate.setMinutes(0);
-    localDate.setSeconds(0);
-    localDate.setMilliseconds(0);
-
-    // Date below will have been set to earliest possible time
-    // at date string. Hence the need to set hours etc for
-    // localDate above as otherwise the
-    // if statement below may fail, even if the calendar dates
-    // are the same, due to a discrepancy in time values.
-
-    // Date below was created as part of handleInputChange
-    // for fields of type 'date'.
-    const inputDepartDate = this.state["depart-date"].dateObject;
-
-    // checking local date in milliseconds since 01/01/1970
-    // to the inputDepartDate in milliseconds since 01/01/1970
-    if(localDate.getTime() <= inputDepartDate.getTime()) {
-      // is users local date is equal to or earlier than
-      // the input depart date then it is treated as valid
-      validDepartDate = true;
-    }
-    return validDepartDate;
-  }
-
-  isOriginValid = () => {
-    let validOrigin = false;
-    this.state.originOptions.forEach( option => {
-      if(this.state["origin-list"] === option.props.value) {
-        validOrigin = true;
-      }
-    });
-    return validOrigin;
-  }
-
-  checkRequiredFieldsFilled = () => {
-    let requirements = {
-      allPassed: true,
-      emptyFields: []
+      },
+      strings: siteStrings[this.props.language].inspirationSearch
     };
-    const emptyFields = [];
-    this.state.required.forEach( req => {
-      if (this.state[req] === "") {
-        requirements.allPassed = false
-        requirements.emptyFields.push(req)
-      }
-    })
-    return requirements;
   }
+
 
   setupOrigins = () => {
     const originOptions = [];
@@ -239,46 +91,316 @@ class InspirationSearchForm extends Component {
     const listOfCurrKeys = Object.keys(acceptedCurrencies);
 
     listOfCurrKeys.forEach((currCode, index) => {
+
+      /*
+      * tried below but found usability issue where is the
+      * empty option is selected then other options cannot be
+      * seen as the list does not contain any currencies that
+      * begin with a whitespace character.
+      * Using disabled attribute just removes it from view
+      * Adding a <br> instead doesn't work.
+      * Can perhaps add a special class to the third of the
+      * main targeted currencies and give that a special bottom
+      * border?
+      */
       // separates the main three currencies from the rest
       // in the datalist.
-      if(index === 3){
-        currencies.push(
-          <option value=" " key={nanoid()} />
-        );
-      }
+      // if(index === 3){
+      //   currencies.push(
+      //     <option value=" " key={nanoid()} />
+      //   );
+      // }
 
       const symbol = acceptedCurrencies[currCode].symbol;
-      currencies.push(
-        <option value={currCode} key={nanoid()}>
-          {symbol}
-        </option>
-      );
+      let option;
+      if(index !== 2){
+        option = (
+          <option value={currCode} key={nanoid()}>
+            {symbol}
+          </option>
+        )
+      } else {
+        option = (
+          <option value={currCode} id="end-main-currencies" key={nanoid()}>
+            {symbol}
+          </option>
+        )
+      }
+      currencies.push(option);
     })
 
     return currencies;
   }
 
-  // TODO: convert to switch, prevent invalid depart dates here.
+
+  // could be performed async with Promise.all for example
+  // but not even computation required in any of the called
+  // methods to require an async version, doing so may
+  // even slow things down.
+  handleSubmit = (event) => {
+    event.preventDefault();
+
+    // checks origin, depart, and return fields are not at default
+    // matches default state for attemptedSubmission key's upper half
+    const fieldChecksJSON = JSON.stringify(this.state.attemptedSubmission);
+    const fieldChecks = JSON.parse(fieldChecksJSON);
+
+    // set a baseline by clearing any previous errors
+    fieldChecks.failed = false;
+    fieldChecks.requiredFieldsAreEmpty = {
+      "origin-list": false,
+      "depart-date": false,
+      "return-date": false
+    }
+    // check if any required fields have been left empty
+    this.checkRequiredFieldsFilled(fieldChecks);
+    // check if there are any outstanding invalid inputs
+    // and setting fieldChecks.failed back to true if so.
+    this.checkStatusValidInAllReqFields(fieldChecks);
+    if(fieldChecks.failed){
+      this.handleFailedSubmission(fieldChecks);
+      return;
+    }
+
+    console.log('success');
+  }
+
+  checkStatusValidInAllReqFields = (fieldChecks) => {
+    const fields = fieldChecks.checkedFieldValuesInvalid;
+    const fieldKeys = Object.keys(fields);
+    fieldKeys.forEach(field => {
+      if(fields[field].invalid === true) {
+        fieldChecks.failed = true;
+      }
+    })
+  }
+
+  // TODO:
+  // rendering should check this value and inform user in some way
+  // perhaps settings a class to display a red border?
+  // and perhaps assign text as final span to lis containing
+  // invalid input?
+  handleFailedSubmission = (results) => {
+    this.setState({
+      attemptedSubmission: results
+    });
+  }
+
+  checkRequiredFieldsFilled = (fieldChecks) => {
+    this.state.required.forEach( field => {
+      // first check is for origin-list, second is for depart/return dates
+      // which are stored in a different structure to the origin in the state.
+      if (this.state[field] === "" || this.state[field].value === "") {
+        fieldChecks.failed = true;
+        fieldChecks.requiredFieldsAreEmpty[field] = true;
+      }
+    });
+  }
+
+
   handleInputChange = (event) => {
     const target = event.target
     const value = target.type === 'checkbox' ? target.checked : target.value;
 
-    if(target.type === 'date') {
-      this.setState({
-        [target.name]: {
-          string: value,
-          dateObject: new Date(value)
-        }
-      });
-    } else {
-      this.setState({
-        [target.name]: value
-      })
+    switch (target.type) {
+      case "date":
+        this.setState({
+          [target.name]: {
+            value: value,
+            dateObject: new Date(value)
+          }
+        });
+        break;
+      default:
+        this.setState({
+          [target.name]: value
+        })
     }
   }
 
+  // handles when required fields lose focus
+  // checks they have valid input
+  handleInputBlur = (event) => {
+    const name = event.target.name;
+    let defaultStartingValue = true;
+    // copy state object into a new object with a new reference
+    const fieldChecksJSON = JSON.stringify(this.state.attemptedSubmission);
+    const fieldChecks = JSON.parse(fieldChecksJSON);
+
+    switch (name) {
+      case "origin-list":
+        // these and future if statements are to protect
+        // against user just tabbing past empty fields
+        // firing off methods that expect non-empty values
+        if(this.state["origin-list"] !== "") {
+          this.checkOriginValid(fieldChecks);
+          defaultStartingValue = false;
+        }
+        break;
+      case "depart-date":
+        if(this.state["depart-date"].value !== "") {
+          this.checkDepartDateValid(fieldChecks);
+          defaultStartingValue = false;
+        }
+        break;
+      case "return-date":
+        if(this.state["return-date"].value !== "") {
+          this.checkReturnDateValid(fieldChecks);
+          defaultStartingValue = false;
+        }
+        break;
+      case "currency-select":
+        if(this.state["currency-select"] !== "") {
+          this.checkCurrencyValid(fieldChecks)
+          defaultStartingValue = false;
+        }
+        break;
+      default:
+        return;
+    };
+
+    // below sets value of fieldChecks.failed to true
+    // if there were invalid values on other keys as well
+    // as the one which just lost focus.
+    if(!fieldChecks.failed){
+      this.checkStatusValidInAllReqFields(fieldChecks);
+    }
+
+    // if user wasn't just tabbing past empty fields
+    // then call setState with any new values
+    if(!defaultStartingValue){
+      this.setState({
+        attemptedSubmission: fieldChecks
+      });
+    }
+  }
+
+
+  checkCurrencyValid = (fieldChecks) => {
+    // setting default to it has failed
+    fieldChecks.failed = true;
+
+    const reasons = this.state.strings.formSubmissionErrors["currency-select"]
+    const field = fieldChecks.checkedFieldValuesInvalid["currency-select"]
+    field.invalid = true;
+    field.reason = reasons.invalid;
+
+    // looking for one correct value, if found will set fail status
+    // to false.
+    this.state.currencyList.forEach(option => {
+      if(this.state["currency-select"] === option.props.value) {
+        fieldChecks.failed = false;
+        field.invalid = false;
+        field.reason = null;
+      }
+    });
+  }
+
+  checkOriginValid = (fieldChecks) => {
+    // setting default to it has failed
+    fieldChecks.failed = true;
+
+    const reasons = this.state.strings.formSubmissionErrors["origin-list"]
+    const field = fieldChecks.checkedFieldValuesInvalid["origin-list"]
+    field.invalid = true;
+    field.reason = reasons.invalid;
+
+    // looking for one correct value, if found will set fail status
+    // to false.
+    this.state.originOptions.forEach(option => {
+      if(this.state["origin-list"] === option.props.value) {
+        fieldChecks.failed = false;
+        field.invalid = false;
+        field.reason = null;
+      }
+    });
+  }
+
+  checkDepartDateValid = (fieldChecks) => {
+    // creating date object using local time
+    const localDate = new Date();
+    const reasons = this.state.strings.formSubmissionErrors["depart-date"];
+    const field = fieldChecks.checkedFieldValuesInvalid["depart-date"];
+
+    // setting a baseline by returning to default values
+    fieldChecks.failed = false;
+    field.invalid = false;
+    field.reason = null;
+
+    // setting to earliest point possible in said date
+    localDate.setHours(0);
+    localDate.setMinutes(0);
+    localDate.setSeconds(0);
+    localDate.setMilliseconds(0);
+
+    // Date below will have been set to earliest possible time
+    // at date string. Hence the need to set hours etc for
+    // localDate above as otherwise the
+    // if statement below may fail, even if the calendar dates
+    // are the same, due to a discrepancy in time values.
+
+    // Date below was created as part of handleInputChange
+    // for fields of type 'date'.
+    const inputDepartDate = this.state["depart-date"].dateObject;
+
+    // checking local date in milliseconds since 01/01/1970
+    // to the inputDepartDate in milliseconds since 01/01/1970
+    if(localDate.getTime() > inputDepartDate.getTime()) {
+      // if users zero-houred local date is greater than
+      // the input depart date, then the depart date
+      // is treated as invalid
+      fieldChecks.failed = true;
+      field.invalid = true;
+      field.reason = reasons.passed;
+    }
+  }
+
+  checkReturnDateValid = (fieldChecks) => {
+    const reasons = this.state.strings.formSubmissionErrors["return-date"]
+    const field = fieldChecks.checkedFieldValuesInvalid["return-date"]
+
+    // setting a baseline by returning to default values
+    fieldChecks.failed = false;
+    field.invalid = false;
+    field.reason = null;
+
+    const inputReturnDate = this.state["return-date"].dateObject;
+    const inputDepartDate = this.state["depart-date"].dateObject;
+
+    // finds the difference in milliseconds
+    const differenceMs = inputReturnDate - inputDepartDate;
+    if(differenceMs < 0) {
+      fieldChecks.failed = true;
+      field.invalid = true;
+      field.reason = reasons.tooEarly;
+      return;
+    }
+    // creates an object with a date based on the milliseconds
+    // after 01/01/1970
+    const differenceDateObject = new Date(differenceMs);
+    /*
+    * grabs date value which will be the number of days between
+    * the input depart and return dates.
+    * starts at a baseline of a full day, so need to remove 1
+    * from differenceDays to achieve an accurant value
+
+    * For instance 2018/02/20 - 2018/02/20 entered into
+    * a new date object would return a day below of 1, rather
+    * than 0, as long as the times in ms are not exactly the same.
+    */
+    const differenceDays = differenceDateObject.getDate() - 1;
+    // amadeus API only accepts durations between 1 and 15
+    // inclusive. No returning the same day, or 16 days later.
+    if(differenceDays < 1 || differenceDays > 15) {
+      fieldChecks.failed = true;
+      field.invalid = true;
+      field.reason = differenceDays < 1 ? reasons.tooEarly : reasons.tooFar
+    }
+  }
+
+
   render() {
-    const strings = siteStrings[this.props.language]
+    const strings = siteStrings[this.props.language].inspirationSearch
 
     return (
       <form action="/api/search" method="get" className="search-form" target="_self"
@@ -294,6 +416,7 @@ class InspirationSearchForm extends Component {
               fieldId="origin-list"
               labelString={strings.originInput}
               handleChange={this.handleInputChange}
+              handleBlur={this.handleInputBlur}
               value={this.state["origin-list"]}
               datalistId="origins"
               options={this.state.originOptions} />
@@ -305,6 +428,7 @@ class InspirationSearchForm extends Component {
               fieldId="depart-date"
               value={this.state["depart-date"].string}
               handleChange={this.handleInputChange}
+              handleBlur={this.handleInputBlur}
               labelString={strings.departDate} />
             <SpanInputDate
               classesString="col-span-5 insp-list-text-field"
@@ -312,6 +436,7 @@ class InspirationSearchForm extends Component {
               fieldId="return-date"
               value={this.state["return-date"].string}
               handleChange={this.handleInputChange}
+              handleBlur={this.handleInputBlur}
               labelString={strings.returnDate} />
           </li>
           <li>
@@ -341,6 +466,7 @@ class InspirationSearchForm extends Component {
               fieldId="currency-select"
               labelString={strings.currencySelectLabel}
               handleChange={this.handleInputChange}
+              handleBlur={this.handleInputBlur}
               value={this.state["currency-select"]}
               datalistId="currency-datalist"
               options={this.state.currencyList} />
@@ -364,7 +490,7 @@ class InspirationSearchForm extends Component {
               id="submit-insp-form-span"
               buttonId="submit-insp-form"
               buttonClassesString="form-button"
-              buttonText={strings.submit} />
+              buttonText={siteStrings[this.props.language].submit} />
           </li>
         </ul>
       </form>

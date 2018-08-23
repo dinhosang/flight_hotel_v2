@@ -5,7 +5,7 @@ import SpanInputSelect from './SpanInputSelect.js';
 import siteStrings from '../resources/site_strings.js';
 
 const FieldsetTicketChoice = (props) => {
-  const strings = siteStrings[props.language]
+  const strings = siteStrings[props.language].inspirationSearch
   return (
     <fieldset className={props.classesString}>
       <legend>
