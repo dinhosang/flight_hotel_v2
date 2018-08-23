@@ -40,7 +40,19 @@ class InspirationSearchForm extends Component {
         "depart-date",
         "return-date"
       ],
-      failedSubmission: false
+      attemptedSubmission: {
+        failed: false,
+        requiredFieldsEmpty: {
+          "origin-list": false,
+          "depart-date": false,
+          "return-date": false
+        },
+        invalidFieldValues: {
+          "origin-list": false,
+          "depart-date": false,
+          "return-date": false
+        }
+      }
     };
   }
 
@@ -52,44 +64,71 @@ class InspirationSearchForm extends Component {
     event.preventDefault();
 
     // checks origin, depart, and return fields are not at default
-    const requirementsPassed = this.isRequiredFieldsFilled();
-    if(!requirementsPassed) {
-      this.handleFailedSubmission();
-      return;
+    const requirements = this.checkRequiredFieldsFilled();
+    if(!requirements.allPassed) {
+      const emptyFieldsCheck = {
+          failed: true,
+          requiredFieldsEmpty: {
+            "origin-list": false,
+            "depart-date": false,
+            "return-date": false
+          }
+        }
+      requirements.emptyFields.forEach( field => {
+        emptyFieldsCheck.requiredFieldsEmpty[field] = true;
+      })
+
+      this.handleFailedSubmission(emptyFieldsCheck);
     }
+
+
+    const fieldValuesCheck = {
+      failed: false,
+      invalidFieldValues: {
+        "origin-list": false,
+        "depart-date": false,
+        "return-date": false
+      }
+    }
+    // TODO: modify below so that instead of returning booleans
+    // they take in above object and assign values as needed
+    // per the results of the check. Perhaps change values of
+    // attributes in invalidFieldValues object to be objects
+    // themselves with a boolean and a string detailing the
+    // nature of the error?
 
     // checks origin value matches a value on one of the
     // datalist options.
     const validOrigin = this.isOriginValid();
     if(!validOrigin) {
-      this.handleFailedSubmission();
-      return;
+      fieldValuesCheck.failed = true;
+      fieldValuesCheck.invalidFieldValues["origin-list"] = true;
     }
-
     // checks depart date is equal to or later than today's date
     const validDepartDate = this.isDepartDateValid();
     if(!validDepartDate) {
-      this.handleFailedSubmission();
-      return;
+      fieldValuesCheck.failed = true;
+      fieldValuesCheck.invalidFieldValues["depart-date"] = true;
     }
-
     // checks return date is 1-15 days from depart date
     const validReturnDate = this.isReturnDateValid();
     if(!validReturnDate) {
-      this.handleFailedSubmission();
-      return;
+      fieldValuesCheck.failed = true;
+      fieldValuesCheck.invalidFieldValues["return-date"] = true;
+    }
+    if(fieldValuesCheck.failed){
+      this.handleFailedSubmission(fieldValuesCheck);
     }
   }
 
   // TODO:
-  // rendering should check this value, determine what caused
-  // the failure, and inform user in some way
+  // rendering should check this value and inform user in some way
   // perhaps settings a class to display a red border?
   // and perhaps assign text as final span to lis containing
   // invalid input?
-  handleFailedSubmission = () => {
+  handleFailedSubmission = (results) => {
     this.setState({
-      failedSubmission: true
+      attemptedSubmission: results
     });
   }
 
@@ -165,14 +204,19 @@ class InspirationSearchForm extends Component {
     return validOrigin;
   }
 
-  isRequiredFieldsFilled = () => {
-    let requirementsPassed = true;
+  checkRequiredFieldsFilled = () => {
+    let requirements = {
+      allPassed: true,
+      emptyFields: []
+    };
+    const emptyFields = [];
     this.state.required.forEach( req => {
       if (this.state[req] === "") {
-        requirementsPassed = false
+        requirements.allPassed = false
+        requirements.emptyFields.push(req)
       }
     })
-    return requirementsPassed;
+    return requirements;
   }
 
   setupOrigins = () => {
