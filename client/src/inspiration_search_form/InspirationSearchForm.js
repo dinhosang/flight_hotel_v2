@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import nanoid from 'nanoid';
 
 import SpanInputDatalist from './SpanInputDatalist.js';
@@ -7,6 +7,7 @@ import SpanInputSelect from './SpanInputSelect.js';
 import SpanInputCheckbox from './SpanInputCheckbox.js';
 import TicketChoice from './FieldsetTicketChoice.js';
 import SpanButton from './SpanButton.js';
+import ErrorSpan from './ErrorSpan.js';
 
 import siteStrings from '../resources/site_strings.js';
 import originIatas from '../resources/inspiration_origins_iata.js';
@@ -43,9 +44,18 @@ class InspirationSearchForm extends Component {
       attemptedSubmission: {
         failed: false,
         requiredFieldsAreEmpty: {
-          "origin-list": false,
-          "depart-date": false,
-          "return-date": false
+          "origin-list": {
+            empty: false,
+            reason: null
+          },
+          "depart-date": {
+            empty: false,
+            reason: null
+          },
+          "return-date": {
+            empty: false,
+            reason: null
+          }
         },
         checkedFieldValuesInvalid: {
           "origin-list": {
@@ -148,9 +158,18 @@ class InspirationSearchForm extends Component {
     // set a baseline by clearing any previous errors
     fieldChecks.failed = false;
     fieldChecks.requiredFieldsAreEmpty = {
-      "origin-list": false,
-      "depart-date": false,
-      "return-date": false
+      "origin-list": {
+        empty: false,
+        reason: null
+      },
+      "depart-date": {
+        empty: false,
+        reason: null
+      },
+      "return-date": {
+        empty: false,
+        reason: null
+      }
     }
     // check if any required fields have been left empty
     this.checkRequiredFieldsFilled(fieldChecks);
@@ -192,7 +211,10 @@ class InspirationSearchForm extends Component {
       // which are stored in a different structure to the origin in the state.
       if (this.state[field] === "" || this.state[field].value === "") {
         fieldChecks.failed = true;
-        fieldChecks.requiredFieldsAreEmpty[field] = true;
+        const fieldStatus = fieldChecks.requiredFieldsAreEmpty[field];
+        const strings = this.state.strings.formSubmissionErrors;
+        fieldStatus.empty = true;
+        fieldStatus.reason = strings[field].empty;
       }
     });
   }
@@ -399,46 +421,199 @@ class InspirationSearchForm extends Component {
   }
 
 
-  render() {
-    const strings = siteStrings[this.props.language].inspirationSearch
+  /*
+  *
+  * Methods for Rendering
+  *
+  */
 
+  // used to prepare classes and error messages
+  // for input spans - if applicable.
+  prepareValuesForValidatedInput = (field) => {
+    const statusChecker = this.state.attemptedSubmission;
+    // grabs object containing valuess concerning emptiness of input
+    const emptyChecker = statusChecker.requiredFieldsAreEmpty[field];
+    // grabs objects containing values concerning validity of input
+    const invalidChecker = statusChecker.checkedFieldValuesInvalid[field];
+
+    // grabs boolean which details whether inputs are empty.
+    // emptyChecker will be undefined for the currency-select
+    // field as an empty check is not made for that field as it
+    // is not required.
+    // below if statement will assign correct value to isEmpty
+    // should the field be other than the currency-select.
+    let isEmpty = false;
+    if(typeof emptyChecker !== 'undefined'){
+      isEmpty = emptyChecker.empty;
+    };
+    // grabs boolean which details whether inputs are valid
+    const isInvalid = invalidChecker.invalid;
+
+    // prepares and error message based on whether an error exists
+    // and if it does, what type of error it is.
+    let errorMessage;
+    if(isEmpty){
+      errorMessage = (
+        <p className="error-text">
+          {this.state.strings.formSubmissionErrors[field].empty}
+        </p>
+      );
+    } else if (isInvalid){
+      const invalidValues = this.state.attemptedSubmission.checkedFieldValuesInvalid
+      errorMessage = (
+        <p className="error-text">
+          {invalidValues[field].reason}
+        </p>
+      );
+    }
+
+    // if there is no error for field it will assign default classes
+    // otherwise it will include a class of input-error.
+    let classes;
+    if(!isEmpty && !isInvalid){
+      classes = "col-span-5 insp-list-text-field";
+    } else {
+      classes = "col-span-5 input-error insp-list-text-field";
+    }
+
+    return {
+      error: errorMessage,
+      classes: classes
+    }
+  }
+
+  // creates first li in form ul for origin based on whether errors exist
+  createOriginLi = () => {
+    // creaets classes and error message for origin li
+    const values = this.prepareValuesForValidatedInput("origin-list");
+    const originSpan = (
+      <SpanInputDatalist
+        classesString={values.classes}
+        id="inspiration-origin-span"
+        fieldId="origin-list"
+        labelString={this.state.strings.originInput}
+        handleChange={this.handleInputChange}
+        handleBlur={this.handleInputBlur}
+        value={this.state["origin-list"]}
+        datalistId="origins"
+        options={this.state.originOptions} />
+    );
+    // creates empty span for filling space in origin li
+    const emptySpaceSpan = <span className="col-span-5" />;
+    // assigns error message as child to error span (if message exists)
+    const errorSpan = (
+      <ErrorSpan>
+        {values.error}
+      </ErrorSpan>
+    )
+
+    return (
+      <li>
+        {originSpan}
+        {emptySpaceSpan}
+        {errorSpan}
+      </li>
+    )
+  }
+
+  // creates second li for form ul for depart and return date fields
+  // based on whether errors exist.
+  createDatesLi = () => {
+    let departOption;
+    let returnOption;
+    let errorSpan;
+
+    let departWarning;
+    let returnWarning;
+
+    // if no error for depart date it will assign default classes
+    // otherwise it will include a class of input-error.
+    const departVal = this.prepareValuesForValidatedInput("depart-date");
+    departOption = (
+      <SpanInputDate
+        classesString={departVal.classes}
+        id="inspiration-depart-date-span"
+        fieldId="depart-date"
+        value={this.state["depart-date"].value}
+        handleChange={this.handleInputChange}
+        handleBlur={this.handleInputBlur}
+        labelString={this.state.strings.departDate} />
+    );
+    // assigns error message if necessary
+    departWarning = departVal.error;
+
+    // if no error for return date it will assign default classes
+    // otherwise it will include a class of input-error.
+    const returnVal = this.prepareValuesForValidatedInput("return-date");
+    returnOption = (
+      <SpanInputDate
+        classesString={returnVal.classes}
+        id="inspiration-depart-date-span"
+        fieldId="depart-date"
+        value={this.state["depart-date"].value}
+        handleChange={this.handleInputChange}
+        handleBlur={this.handleInputBlur}
+        labelString={this.state.strings.departDate} />
+    )
+    // assigns error message if necessary
+    returnWarning = returnVal.error;
+    errorSpan = (
+      <ErrorSpan>
+        {departWarning}
+        {returnWarning}
+      </ErrorSpan>
+    );
+
+    return (
+      <li>
+        {departOption}
+        {returnOption}
+        {errorSpan}
+      </li>
+    );
+  }
+
+  // creates final two spans for third li for currency and error span
+  // based on whether error exists.
+  createCurrencyAndErrorSpan = () => {
+    const values = this.prepareValuesForValidatedInput("currency-select");
+    const currencySpan = (
+      <SpanInputDatalist
+        classesString={values.classes}
+        id="currency-select-span"
+        fieldId="currency-select"
+        labelString={this.state.strings.currencySelectLabel}
+        handleChange={this.handleInputChange}
+        handleBlur={this.handleInputBlur}
+        value={this.state["currency-select"]}
+        datalistId="currency-datalist"
+        options={this.state.currencyList} />
+    );
+    const errorSpan = (
+      <ErrorSpan>
+        {values.error}
+      </ErrorSpan>
+    )
+
+    return (
+      <Fragment>
+        {currencySpan}
+        {errorSpan}
+      </Fragment>
+    )
+
+  }
+
+  render() {
     return (
       <form action="/api/search" method="get" className="search-form" target="_self"
       onSubmit={this.handleSubmit}>
         <header>
-          {strings.inspFormHeader}
+          {this.state.strings.inspFormHeader}
         </header>
         <ul>
-          <li>
-            <SpanInputDatalist
-              classesString="col-span-5 insp-list-text-field"
-              id="inspiration-origin-span"
-              fieldId="origin-list"
-              labelString={strings.originInput}
-              handleChange={this.handleInputChange}
-              handleBlur={this.handleInputBlur}
-              value={this.state["origin-list"]}
-              datalistId="origins"
-              options={this.state.originOptions} />
-          </li>
-          <li>
-            <SpanInputDate
-              classesString="col-span-5 insp-list-text-field"
-              id="inspiration-depart-date-span"
-              fieldId="depart-date"
-              value={this.state["depart-date"].string}
-              handleChange={this.handleInputChange}
-              handleBlur={this.handleInputBlur}
-              labelString={strings.departDate} />
-            <SpanInputDate
-              classesString="col-span-5 insp-list-text-field"
-              id="inspiration-return-date-span"
-              fieldId="return-date"
-              value={this.state["return-date"].string}
-              handleChange={this.handleInputChange}
-              handleBlur={this.handleInputBlur}
-              labelString={strings.returnDate} />
-          </li>
+          {this.createOriginLi()}
+          {this.createDatesLi()}
           <li>
             <SpanInputSelect
               classesString="col-span-5 insp-list-text-field"
@@ -446,37 +621,21 @@ class InspirationSearchForm extends Component {
               fieldId="seat-class"
               value={this.state["seat-class"]}
               handleChange={this.handleInputChange}
-              labelString={strings.seatClass.label}>
+              labelString={this.state.strings.seatClass.label}>
                 <option value="ECONOMY">
-                  {strings.seatClass.economy}
+                  {this.state.strings.seatClass.economy}
                 </option>
                 <option value="PREMIUM_ECONOMY">
-                  {strings.seatClass.premiumEconomy}
+                  {this.state.strings.seatClass.premiumEconomy}
                 </option>
                 <option value="BUSINESS">
-                  {strings.seatClass.business}
+                  {this.state.strings.seatClass.business}
                 </option>
                 <option value="FIRST">
-                  {strings.seatClass.first}
+                  {this.state.strings.seatClass.first}
                 </option>
             </SpanInputSelect>
-            <SpanInputDatalist
-              classesString="col-span-5 insp-list-text-field"
-              id="currency-select-span"
-              fieldId="currency-select"
-              labelString={strings.currencySelectLabel}
-              handleChange={this.handleInputChange}
-              handleBlur={this.handleInputBlur}
-              value={this.state["currency-select"]}
-              datalistId="currency-datalist"
-              options={this.state.currencyList} />
-            <SpanInputCheckbox
-              classesString="col-span-5"
-              id="direct-flight-checkbox-span"
-              fieldId="direct-flight-checkbox"
-              isChecked={this.state["direct-flight-checkbox"]}
-              handleChange={this.handleInputChange}
-              labelString={strings.directCheckboxLabel} />
+            {this.createCurrencyAndErrorSpan()}
           </li>
           <li>
             <TicketChoice
@@ -486,7 +645,14 @@ class InspirationSearchForm extends Component {
               adultTicketsValue={this.state["adult-tickets"]}
               childrenTicketsValue={this.state["children-tickets"]}
               infantTicketsValue={this.state["infant-tickets"]} />
-            <SpanButton classesString="col-span-5"
+            <SpanInputCheckbox
+              classesString="col-span-5"
+              id="direct-flight-checkbox-span"
+              fieldId="direct-flight-checkbox"
+              isChecked={this.state["direct-flight-checkbox"]}
+              handleChange={this.handleInputChange}
+              labelString={this.state.strings.directCheckboxLabel} />
+            <SpanButton classesString="col-span-6"
               id="submit-insp-form-span"
               buttonId="submit-insp-form"
               buttonClassesString="form-button"
