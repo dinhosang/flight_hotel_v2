@@ -5,6 +5,8 @@ import requestTool from '../helper_tools/request_tool.js';
 import logger from '../helper_tools/async_logger.js';
 import requestValidator from '../request_validation/request_validator.js';
 
+import fakeData from './helper_tools/fake_insp_api_response.js';
+
 const searchRouter = new express.Router();
 const getRequestValidatorMiddleWare = requestValidator.search.get
 const searchGetMiddleware = async (req, res, next) => {
@@ -30,6 +32,11 @@ const searchGetMiddleware = async (req, res, next) => {
   res.json(apiResponse.data);
 };
 
+const fakeSearchGetMiddleware = async (req, res, next) => {
+  res.json(fakeData)
+}
+
 searchRouter.get('/', getRequestValidatorMiddleWare, searchGetMiddleware);
+searchRouter.get('/fake', getRequestValidatorMiddleWare, fakeSearchGetMiddleware);
 
 export {searchRouter as default, searchGetMiddleware};

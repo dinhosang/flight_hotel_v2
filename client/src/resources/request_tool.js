@@ -2,11 +2,18 @@ import axios from 'axios';
 
 const requestTool = {
 
-  get: async (url) => {
+  get: async (details) => {
     try {
-      return await axios.get(url);
+      const result = await axios.get(details.url, details.config);
+      return {
+        success: true,
+        data: result.data
+      }
     } catch (e) {
-      throw e;
+      return {
+        success: false,
+        status: e.status
+      }
     }
   }
 }

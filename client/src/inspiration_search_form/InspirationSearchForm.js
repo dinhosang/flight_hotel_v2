@@ -13,6 +13,8 @@ import siteStrings from '../resources/site_strings.js';
 import originIatas from '../resources/inspiration_origins_iata.js';
 import cityDetails from '../resources/city_details.js';
 import acceptedCurrencies from '../resources/amadeus_accepted_currencies.js';
+import request from '../resources/request_tool.js';
+
 
 class InspirationSearchForm extends Component {
 
@@ -149,7 +151,7 @@ class InspirationSearchForm extends Component {
   // but not even computation required in any of the called
   // methods to require an async version, doing so may
   // even slow things down.
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
     event.preventDefault();
 
     // checks origin, depart, and return fields are not at default
@@ -183,7 +185,42 @@ class InspirationSearchForm extends Component {
       return;
     }
 
-    console.log('success');
+    const config = {
+      params: this.prepareQueries()
+    }
+
+    // using fake url instead of making request to live api
+    // live api route is '/api/search' - removing the '/fake' part
+    const results = await request.get({
+      url: '/api/search/fake',
+      config: config
+    })
+
+    if(results.success){
+      this.props.handleSearch({
+        values: this.state.fieldValues,
+        data: results.data
+      });
+    } else {
+      // handle errors in requests
+      // perhaps display a dialog that pops up to say
+      // try searching again later?
+    }
+  }
+
+  prepareQueries = () => {
+    const departDate = this.state.fieldValues["depart-date"].dateObject;
+    const returnDate = this.state.fieldValues["return-date"].dateObject;
+    const differenceMs = returnDate - departDate;
+    const duration = (new Date(differenceMs)).getDate();
+
+    return {
+      searchType: "INSPIRATION",
+      departure_date: this.state.fieldValues["depart-date"].value,
+      origin: this.state.fieldValues["origin-list"],
+      duration: duration,
+      direct: this.state.fieldValues["direct-flight-checkbox"]
+    }
   }
 
   checkStatusValidInAllReqFields = (fieldChecks) => {
