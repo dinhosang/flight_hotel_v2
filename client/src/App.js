@@ -76,7 +76,7 @@ class App extends Component {
       altText: siteStrings[currentLang].altLogoImg,
       handleClick: this.handleClickSearchType.bind(this, siteStrings.english.homepage),
       id: "site-banner-logo",
-      span: "col-span-1"
+      width: "col-span-1"
     }
 
     const prepareLanguageSelectDetails = () => {
