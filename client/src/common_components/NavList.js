@@ -1,9 +1,9 @@
 import React from 'react';
 
 const NavList = (props) => {
-  if(props.display === "undefined" || props.display) {
+  if(typeof props.display === "undefined" || props.display) {
     return (
-      <nav id={props.id} className={props.span}>
+      <nav id={props.id} className={props.width}>
         <ul>
           {props.navItems}
         </ul>
@@ -11,7 +11,7 @@ const NavList = (props) => {
     );
   } else {
     return (
-      <nav id={props.id} className={`hidden ${props.span}`}>
+      <nav id={props.id} className={`hidden ${props.width}`}>
         <ul>
           {props.navItems}
         </ul>

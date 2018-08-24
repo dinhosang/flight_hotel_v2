@@ -125,7 +125,7 @@ class App extends Component {
     const navItems = createSiteBannerNavItems();
     const navDetails = {
       navItems: navItems,
-      span: "col-span-7"
+      width: "col-span-7"
     }
     const userOptionsDetails = {
       summary: "User",
