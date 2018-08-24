@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon -V --exec npm run babel-node",
     "test": "mocha --require babel-register --require babel-polyfill -A ./server/**/*_spec.js",
-    "integration_test": "mocha --require babel-register --require babel-polyfill -A ./server/**/*_spec_integration.js", 
+    "integration_test": "mocha --require babel-register --require babel-polyfill -A ./server/**/*_spec_integration.js",
     "babel-node": "babel-node ./server/server.js"
   },
   "keywords": [],
