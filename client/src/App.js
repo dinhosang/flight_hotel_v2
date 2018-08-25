@@ -15,7 +15,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayNav: false,
+      displayNav: true,
       currentLanguage: "english",
       // grabs protocol and domain from browser, not including paths
       domain: document.location.origin

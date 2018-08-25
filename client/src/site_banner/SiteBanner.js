@@ -24,7 +24,7 @@ const SiteBanner = (props) => {
       {siteLogo}
       <NavList {...props.navDetails} id="site-banner-nav"
         display={props.displayNav}>
-          {props.navItems}
+          {props.navDetails.navItems}
       </NavList>
       <LanguageSelect {...props.langSelectDetails} />
       <UserOptions {...props.userOptionsDetails} />

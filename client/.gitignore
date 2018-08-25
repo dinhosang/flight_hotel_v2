@@ -9,6 +9,9 @@
 # production
 /build
 
+# mini-project
+src/auto_tester
+
 # misc
 .DS_Store
 .env.local
