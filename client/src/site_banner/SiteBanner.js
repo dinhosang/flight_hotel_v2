@@ -22,7 +22,10 @@ const SiteBanner = (props) => {
     <header id="site-banner">
       <span className='col-span-3'/>
       {siteLogo}
-      <NavList {...props.navDetails} id="site-banner-nav" display={props.displayNav}/>
+      <NavList {...props.navDetails} id="site-banner-nav"
+        display={props.displayNav}>
+          {props.navItems}
+      </NavList>
       <LanguageSelect {...props.langSelectDetails} />
       <UserOptions {...props.userOptionsDetails} />
       <span className='col-span-3'/>

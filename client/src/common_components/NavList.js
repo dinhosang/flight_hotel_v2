@@ -5,7 +5,7 @@ const NavList = (props) => {
     return (
       <nav id={props.id} className={props.width}>
         <ul>
-          {props.navItems}
+          {props.children}
         </ul>
       </nav>
     );
@@ -13,7 +13,7 @@ const NavList = (props) => {
     return (
       <nav id={props.id} className={`hidden ${props.width}`}>
         <ul>
-          {props.navItems}
+          {props.children}
         </ul>
       </nav>
     );

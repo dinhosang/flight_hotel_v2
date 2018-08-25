@@ -90,12 +90,16 @@ describe('Common Component - NavList', () => {
     expect(navHasIdFromProp).toEqual(idExample);
   });
 
-  test('should assign prop navItems as children to the ul', async () => {
+  test('should assign prop children as children to the ul', async () => {
     // setup
     const items = ["children", "to", "the", "ul", "component"];
     const numberOfChildren = items.length;
     // enzyme
-    const component = shallow(<NavList navItems={items} />);
+    const component = shallow(
+      <NavList>
+        {items}
+      </NavList>
+    );
     const childrenLength = component.find('ul').children().length;
     // jest
     expect(childrenLength).toBe(numberOfChildren);

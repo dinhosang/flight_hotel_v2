@@ -1,31 +1,15 @@
 import React from 'react';
 
 const Details = (props) => {
-  let finalDetails;
-
-  if(props.open) {
-    finalDetails = (
-      <details id={props.id} className={props.span} open>
-        <summary onClick={props.handleClick}>
-          {props.summary}
-          <span className="dropdown-caret"></span>
-        </summary>
-        {props.children}
-      </details>
-    )
-  } else {
-    finalDetails = (
-      <details id={props.id} className={props.span}>
-        <summary onClick={props.handleClick}>
-          {props.summary}
-          <span className="dropdown-caret"></span>
-        </summary>
-        {props.children}
-      </details>
-    )
-  }
-
-  return finalDetails;
+  return (
+    <details id={props.id} className={props.span} open={props.open}>
+      <summary onClick={props.handleClick}>
+        {props.summary}
+        <span className="dropdown-caret"></span>
+      </summary>
+      {props.children}
+    </details>
+  )
 }
 
 export {Details as default};
