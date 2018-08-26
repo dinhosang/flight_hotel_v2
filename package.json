@@ -7,7 +7,9 @@
     "start": "nodemon -V --exec npm run babel-node",
     "test": "mocha --require babel-register --require babel-polyfill -A ./server/**/*_spec.js",
     "integration_test": "mocha --require babel-register --require babel-polyfill -A ./server/**/*_spec_integration.js",
-    "babel-node": "babel-node ./server/server.js"
+    "babel-node": "babel-node ./server/server.js",
+    "setProcess": "babel-node ./client/src/common_components/ListAnchor.js",
+    "process": "babel-node ./client/src/common_components/common_components_autotest.js"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +24,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-dynamic-import-node": "^2.0.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
