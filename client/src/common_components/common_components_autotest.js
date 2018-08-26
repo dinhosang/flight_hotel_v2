@@ -2,6 +2,14 @@ import Path from 'path';
 
 import Api from '../auto_tester/TestAutomatorApi.js';
 
+
+/*
+*
+* Test Automation Version 1
+*
+*/
+
+
 // ListAnchor
 const ListAnchorPath = Path.join(__dirname, "./ListAnchor.js")
 const listAuto = new Api("ListAnchor", ListAnchorPath);
@@ -9,58 +17,57 @@ const listAuto = new Api("ListAnchor", ListAnchorPath);
 listAuto.child({
   parent: "ListAnchor",
   type: "li",
-  name:  "list"
+  name:  "list",
+  siblingOrder: 0
 });
 listAuto.child({
   parent: "list",
   type: "a",
-  name:  "anchor"
+  name:  "anchor",
+  siblingOrder: 0
 });
 listAuto.child({
   parent: "anchor",
   type: "other",
-  name:  "displayValue"
+  name:  "displayValue",
+  siblingOrder: 0
 });
-
 // TestAutomator tracking attributes for child nodes
 listAuto.childAttributes({
   childDetails: {
     name: "anchor",
     jsx: true
   },
-  attributes: [
-    {
-      name: "href",
-      assignment: {
-        type: Api.ASSIGNMENT_TYPE.STRING,
+  values: {
+    nonEventAttr: [
+      {
+        name: "href",
+        assignmentType: Api.ASSIGNMENT_TYPE.PURE_PROP_ONLY,
         propNames: ["url", "path"],
-        appearance: "url/path"
+        resultAppearance: ["url", "/", "path"]
       }
-    },
-    {
-      name: "onClick",
-      assignment: {
-        type: Api.ASSIGNMENT_TYPE.EXTERNAL_CALLBACK,
+    ],
+    eventAtrr: [
+      {
+        eventType: "click",
+        assignmentType: Api.ASSIGNMENT_TYPE.PURE_PROP_ONLY,
         propNames: ["handleClick"]
       }
-    }
-  ]
+    ]
+  }
 });
 listAuto.childAttributes({
   childDetails: {
     name: "displayValue",
     jsx: false
   },
-  attributes: [
-    {
-      assignment: {
-        type: Api.ASSIGNMENT_TYPE.DISPLAY_ONLY,
-        propNames: ["displayValue"],
-        appearance: "{displayValue}"
-      }
+  values: {
+    display: {
+      assignmentType: Api.ASSIGNMENT_TYPE.PURE_PROP_ONLY,
+      propNames: ["displayValue"],
+      resultAppearance: ["displayValue"]
     }
-  ]
+  }
 })
-
 // process this file
 listAuto.process();

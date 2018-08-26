@@ -8,7 +8,7 @@ Enzyme.configure({
   adapter: new Adapter()
 });
 
-describe('Common Component - ListAnchor', () => {
+describe('ListAnchor - common_components/ListAnchor.js', () => {
 
 // Setting up variable for propless version of ListAnchor
   let noPropComponent
@@ -20,27 +20,28 @@ describe('Common Component - ListAnchor', () => {
 
 
 // Tests checking expected number of html elements
-  test('should render 1 <li> tag', => {
+  test('should render 1 <li> tag', () => {
     // act - find number of <li> tags
     const numberOfLiTags = noPropComponent.find('li').length;
     // assert - number of <li> tags should be 1
     expect(numberOfLiTags).toEqual(1)
-});
+  });
 
-  test('should render 1 <a> tag', => {
+  test('should render 1 <a> tag', () => {
     // act - find number of <a> tags
     const numberOfATags = noPropComponent.find('a').length;
     // assert - number of <a> tags should be 1
     expect(numberOfATags).toEqual(1)
-});
+  });
 
 
 // Tests checking elements are rendered with correct parent/child relationships
-  test('should render <a> within <li>', => {
+  test('should render <a> within <li>', () => {
     // act - checking that route 'li a' has rendered correctly
     const routeExists = noPropComponent.exists('li a');
     // assert - verifying that above check for existance was succesful
     expect(routeExists).toBe(true)
+  });
+
+
 });
-
-
