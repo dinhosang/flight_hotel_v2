@@ -44,4 +44,21 @@ describe('ListAnchor - common_components/ListAnchor.js', () => {
   });
 
 
+// Tests checking props are correctly assigned
+  test('should assign props (url, and path) to the href attributeon the <a> with test name of anchor - result should display: "url/path"', () => {
+    // arrange - set up props and components
+    const url = "url-fu2wr";
+    const path = "path-2jb39";
+
+    const component = shallow(<ListAnchor url={url} path={path} />);
+    const elementToTest_anchor = component.childAt(0).childAt(0);
+    // act - make queries on component
+    const href = elementToTest_anchor.prop('href');
+    const typeCheck = elementToTest_anchor.type();
+   // assert - confirm that anchor has href attribute with the expected value,
+   // and is of type 'a'
+    expect(href).toEqual(`${url}/${path}`);
+    expect(typeCheck).toEqual('a');
+  });
+
 });
