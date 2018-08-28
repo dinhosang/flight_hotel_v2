@@ -42,7 +42,7 @@ listAuto.childAttributes({
     nonEventAttr: [
       {
         name: "href",
-        assignmentType: Api.ASSIGNMENT_TYPE.PURE_PROP_ONLY,
+        assignmentType: Api.ASSIGNMENT_TYPE.NON_EVENT,
         propNames: ["url", "path"],
         resultAppearance: ["url", "/", "path"]
       }
@@ -50,7 +50,7 @@ listAuto.childAttributes({
     eventAtrr: [
       {
         eventType: "click",
-        assignmentType: Api.ASSIGNMENT_TYPE.PURE_PROP_ONLY,
+        assignmentType: Api.ASSIGNMENT_TYPE.EVENT,
         propNames: ["handleClick"]
       }
     ]
@@ -63,7 +63,7 @@ listAuto.childAttributes({
   },
   values: {
     display: {
-      assignmentType: Api.ASSIGNMENT_TYPE.PURE_PROP_ONLY,
+      assignmentType: Api.ASSIGNMENT_TYPE.NON_EVENT,
       propNames: ["displayValue"],
       resultAppearance: ["displayValue"]
     }

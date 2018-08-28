@@ -45,10 +45,12 @@ describe('ListAnchor - common_components/ListAnchor.js', () => {
 
 
 // Tests checking props are correctly assigned
-  test('should assign props (url, and path) to the href attributeon the <a> with test name of anchor - result should display: "url/path"', () => {
+  test('should assign props ( url, and path ) to the href attribute
+  on the <a> with test name of anchor - result should display:
+  "url/path"', () => {
     // arrange - set up props and components
-    const url = "url-fu2wr";
-    const path = "path-2jb39";
+    const url = "url-ekb5v";
+    const path = "path-sxndh";
 
     const component = shallow(<ListAnchor url={url} path={path} />);
     const elementToTest_anchor = component.childAt(0).childAt(0);
@@ -59,6 +61,39 @@ describe('ListAnchor - common_components/ListAnchor.js', () => {
    // and is of type 'a'
     expect(href).toEqual(`${url}/${path}`);
     expect(typeCheck).toEqual('a');
+  });
+
+  test('should assign prop ( handleClick ) to the attribute 
+  which handles an event of type: "click". This attribute will be on the <a> 
+  with the test name of anchor', () => {
+    // arrange - set up callback variables and components
+    let result = 5;
+    const callback = () => result += 2;
+
+    const component = shallow(<ListAnchor handleClick={callback} />);
+    const elementToTest_anchor = component.childAt(0).childAt(0);
+    // act - simulate event to invoke callback,
+    // and query that tested element is the expected type
+    elementToTest_anchor.simulate('click');
+    const typeCheck = elementToTest_anchor.type();
+    // assert - confirm that result variable has a new value of '7'
+    // and that element is of type 'a'
+    expect(result).toEqual(7);
+    expect(typeCheck).toEqual('a');
+  });
+
+    test('should assign prop ( displayValue ) with the result having
+    the appearance of "${displayValue}"', () => {
+    // arrange - setup prop variable(s)
+    const displayValue = "displayValue-44vo5";
+
+    const component = shallow(<ListAnchor displayValue={displayValue} />);
+    const elementToTest_displayValue = component.childAt(0).childAt(0).childAt(0);
+    // act - find the location of the displayed value and
+    // check that said value is equal to the expected value
+    const result = elementToTest_displayValue.equals(`${displayValue}`);
+    // assert - confirm that the above check resolves true
+    result.toBe(true);
   });
 
 });
