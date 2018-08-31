@@ -35,12 +35,22 @@ describe('ListAnchor - common_components/ListAnchor.js', () => {
   });
 
 
-// Tests checking elements are rendered with correct parent/child relationships
+// Tests checking non-other element types are rendered with correct parent/child relationships
   test('should render <a> within <li>', () => {
-    // act - checking that route 'li a' has rendered correctly
+    // act - checking that route 'li a' has rendered correctly (test is ignoring 'other' type elements)
     const routeExists = noPropComponent.exists('li a');
+    // arrange - setting up variables for each element in route.
+
+    // the childAt(index) index may not be exact index as per
+    // the component js file. This will be because an earlier sibling
+    // was of type other, which will not appear in a noPropComponent
+    // As such the index used may be a lower number than expected
+    // due to the indexes that included an other element being ignored
+    const a_routeIndex_1 = noPropComponent.childAt(0);
     // assert - verifying that above check for existance was succesful
     expect(routeExists).toBe(true)
+    expect(noPropComponent.type()).toEqual('li');
+    expect(a_routeIndex_1.type()).toEqual('a');
   });
 
 
@@ -49,8 +59,8 @@ describe('ListAnchor - common_components/ListAnchor.js', () => {
   + ' on the <a> with test name of anchor - result should display:'
   + ' "url/path"', () => {
     // arrange - set up props and components
-    const url_prop = "url-5xlod";
-    const path_prop = "path-vlyha";
+    const url_prop = "url-a9jvz";
+    const path_prop = "path-dzuhg";
 
     const component = shallow(<ListAnchor url={url_prop} path={path_prop} />);
     const elementToTest_anchor = component.childAt(0);
@@ -85,7 +95,7 @@ describe('ListAnchor - common_components/ListAnchor.js', () => {
     test('should assign prop ( displayValue ) with the result having'
     + ' the appearance of "${displayValue_prop}"', () => {
     // arrange - setup prop variable(s)
-    const displayValue_prop = "displayValue-pl87d";
+    const displayValue_prop = "displayValue-z3fm9";
 
     const component = shallow(<ListAnchor displayValue={displayValue_prop} />);
     const elementToTest_displayValue = component.childAt(0).childAt(0);

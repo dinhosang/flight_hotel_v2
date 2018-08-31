@@ -35,12 +35,22 @@ describe('AnchorImage - common_components/AnchorImage.js', () => {
   });
 
 
-// Tests checking elements are rendered with correct parent/child relationships
+// Tests checking non-other element types are rendered with correct parent/child relationships
   test('should render <img> within <a>', () => {
-    // act - checking that route 'a img' has rendered correctly
+    // act - checking that route 'a img' has rendered correctly (test is ignoring 'other' type elements)
     const routeExists = noPropComponent.exists('a img');
+    // arrange - setting up variables for each element in route.
+
+    // the childAt(index) index may not be exact index as per
+    // the component js file. This will be because an earlier sibling
+    // was of type other, which will not appear in a noPropComponent
+    // As such the index used may be a lower number than expected
+    // due to the indexes that included an other element being ignored
+    const img_routeIndex_1 = noPropComponent.childAt(0);
     // assert - verifying that above check for existance was succesful
     expect(routeExists).toBe(true)
+    expect(noPropComponent.type()).toEqual('a');
+    expect(img_routeIndex_1.type()).toEqual('img');
   });
 
 
@@ -49,7 +59,7 @@ describe('AnchorImage - common_components/AnchorImage.js', () => {
   + ' on the <a> with test name of anchor - result should display:'
   + ' "domainUrl"', () => {
     // arrange - set up props and components
-    const domainUrl_prop = "domainUrl-yd485";
+    const domainUrl_prop = "domainUrl-9e6et";
 
     const component = shallow(<AnchorImage domainUrl={domainUrl_prop} />);
     const elementToTest_anchor = component;
@@ -66,7 +76,7 @@ describe('AnchorImage - common_components/AnchorImage.js', () => {
   + ' on the <a> with test name of anchor - result should display:'
   + ' "id"', () => {
     // arrange - set up props and components
-    const id_prop = "id-8bnbl";
+    const id_prop = "id-upuox";
 
     const component = shallow(<AnchorImage id={id_prop} />);
     const elementToTest_anchor = component;
@@ -83,7 +93,7 @@ describe('AnchorImage - common_components/AnchorImage.js', () => {
   + ' on the <a> with test name of anchor - result should display:'
   + ' "width"', () => {
     // arrange - set up props and components
-    const width_prop = "width-40soe";
+    const width_prop = "width-klctn";
 
     const component = shallow(<AnchorImage width={width_prop} />);
     const elementToTest_anchor = component;
@@ -119,7 +129,7 @@ describe('AnchorImage - common_components/AnchorImage.js', () => {
   + ' on the <img> with test name of image - result should display:'
   + ' "image"', () => {
     // arrange - set up props and components
-    const image_prop = "image-equd8";
+    const image_prop = "image-heqir";
 
     const component = shallow(<AnchorImage image={image_prop} />);
     const elementToTest_image = component.childAt(0);
@@ -136,7 +146,7 @@ describe('AnchorImage - common_components/AnchorImage.js', () => {
   + ' on the <img> with test name of image - result should display:'
   + ' "altText"', () => {
     // arrange - set up props and components
-    const altText_prop = "altText-zoo9e";
+    const altText_prop = "altText-dgk7m";
 
     const component = shallow(<AnchorImage altText={altText_prop} />);
     const elementToTest_image = component.childAt(0);

@@ -42,19 +42,41 @@ describe('Details - common_components/Details.js', () => {
   });
 
 
-// Tests checking elements are rendered with correct parent/child relationships
+// Tests checking non-other element types are rendered with correct parent/child relationships
   test('should render <summary> within <details>', () => {
-    // act - checking that route 'details summary' has rendered correctly
+    // act - checking that route 'details summary' has rendered correctly (test is ignoring 'other' type elements)
     const routeExists = noPropComponent.exists('details summary');
+    // arrange - setting up variables for each element in route.
+
+    // the childAt(index) index may not be exact index as per
+    // the component js file. This will be because an earlier sibling
+    // was of type other, which will not appear in a noPropComponent
+    // As such the index used may be a lower number than expected
+    // due to the indexes that included an other element being ignored
+    const summary_routeIndex_1 = noPropComponent.childAt(0);
     // assert - verifying that above check for existance was succesful
     expect(routeExists).toBe(true)
+    expect(noPropComponent.type()).toEqual('details');
+    expect(summary_routeIndex_1.type()).toEqual('summary');
   });
 
   test('should render <span> within <summary> within <details>', () => {
-    // act - checking that route 'details summary span' has rendered correctly
+    // act - checking that route 'details summary span' has rendered correctly (test is ignoring 'other' type elements)
     const routeExists = noPropComponent.exists('details summary span');
+    // arrange - setting up variables for each element in route.
+
+    // the childAt(index) index may not be exact index as per
+    // the component js file. This will be because an earlier sibling
+    // was of type other, which will not appear in a noPropComponent
+    // As such the index used may be a lower number than expected
+    // due to the indexes that included an other element being ignored
+    const summary_routeIndex_1 = noPropComponent.childAt(0);
+    const span_routeIndex_2 = summary_routeIndex_1.childAt(0);
     // assert - verifying that above check for existance was succesful
     expect(routeExists).toBe(true)
+    expect(noPropComponent.type()).toEqual('details');
+    expect(summary_routeIndex_1.type()).toEqual('summary');
+    expect(span_routeIndex_2.type()).toEqual('span');
   });
 
 
@@ -63,7 +85,7 @@ describe('Details - common_components/Details.js', () => {
   + ' on the <details> with test name of details - result should display:'
   + ' "open"', () => {
     // arrange - set up props and components
-    const open_prop = "open-3si3m";
+    const open_prop = "open-388hb";
 
     const component = shallow(<Details open={open_prop} />);
     const elementToTest_details = component;
@@ -80,7 +102,7 @@ describe('Details - common_components/Details.js', () => {
   + ' on the <details> with test name of details - result should display:'
   + ' "id"', () => {
     // arrange - set up props and components
-    const id_prop = "id-yrut1";
+    const id_prop = "id-1w22e";
 
     const component = shallow(<Details id={id_prop} />);
     const elementToTest_details = component;
@@ -97,7 +119,7 @@ describe('Details - common_components/Details.js', () => {
   + ' on the <details> with test name of details - result should display:'
   + ' "span"', () => {
     // arrange - set up props and components
-    const span_prop = "span-slgjk";
+    const span_prop = "span-y1i0y";
 
     const component = shallow(<Details span={span_prop} />);
     const elementToTest_details = component;
@@ -132,7 +154,7 @@ describe('Details - common_components/Details.js', () => {
     test('should assign prop ( summary ) with the result having'
     + ' the appearance of "${summary_prop}"', () => {
     // arrange - setup prop variable(s)
-    const summary_prop = "summary-n4hlu";
+    const summary_prop = "summary-4t0h9";
 
     const component = shallow(<Details summary={summary_prop} />);
     const elementToTest_summaryDisplay = component.childAt(0).childAt(0);
@@ -146,7 +168,7 @@ describe('Details - common_components/Details.js', () => {
     test('should assign prop ( children ) with the result having'
     + ' the appearance of "${children_prop}"', () => {
     // arrange - setup prop variable(s)
-    const children_prop = "children-6zxp2";
+    const children_prop = "children-nw4er";
 
     const component = shallow(<Details children={children_prop} />);
     const elementToTest_children = component.childAt(1);
